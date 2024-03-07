@@ -67,7 +67,7 @@ class ScannerApp(QApplication):
         img = self.__snipper.get_image()
         if img:
             print("aaa")
-            #self.img_menu.popup()
+            # self.img_menu.popup()
             self.img_menu.exec_(QtGui.QCursor.pos())
             print("bbb")
 
