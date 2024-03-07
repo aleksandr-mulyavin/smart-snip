@@ -1,0 +1,24 @@
+version: '3'
+services:
+  gpt-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    image: smart-snip-api:latest
+    container_name: smart-snip-api
+    restart: always
+    command: uvicorn app:app --host 0.0.0.0 --port 8080
+    working_dir: /app
+    networks:
+      - network-smart-snip
+    ports:
+      - "8088:8080"
+    volumes:
+      - logs:/app/logs
+
+volumes:
+  logs: 
+networks:
+  network-smart-snip:
