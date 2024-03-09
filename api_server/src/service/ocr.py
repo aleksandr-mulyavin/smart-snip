@@ -3,9 +3,9 @@ import base64
 from io import BytesIO
 import pytesseract
 
-import service
+from . import logging
 
-logger = service.get_logger(__name__)
+logger = logging.get_logger(__name__)
 
 
 def image_to_string(image_base64: str) -> str:

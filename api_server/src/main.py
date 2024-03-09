@@ -1,10 +1,10 @@
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 
-import service
-from domain import api
+from .service import auth, logging
+from .domain import api
 
-logger = service.get_logger(__name__)
+logger = logging.get_logger(__name__)
 
 app = FastAPI()
 
@@ -31,7 +31,7 @@ async def image_to_text(request: api.ImageToTextRequest) -> JSONResponse:
     """
 
     # авторизация по токену
-    if not service.check_token(request.api_key):
+    if not auth.check_token(request.api_key):
         # если не прошла, то вернем ошибку 401
         logger.error('Authentication failed')
         return JSONResponse(
