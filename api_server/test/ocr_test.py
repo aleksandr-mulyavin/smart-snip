@@ -1,7 +1,7 @@
 import base64
 import os
 
-from src.service.ocr import image_to_string
+from api_server.src.service.ocr import image_to_string
 
 
 def test_recognize_text_from_image(mocker):

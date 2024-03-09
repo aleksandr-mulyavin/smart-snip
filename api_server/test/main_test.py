@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 from fastapi import status
 
-from src.domain import api
-from src.main import app
+from api_server.src.domain import api
+from api_server.src.main import app
 
 client = TestClient(app=app)
 
