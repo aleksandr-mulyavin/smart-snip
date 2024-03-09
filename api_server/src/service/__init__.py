@@ -3,6 +3,8 @@ import os
 from hashlib import md5
 from logging.handlers import TimedRotatingFileHandler
 
+from .ocr import image_to_string
+
 
 def get_logger(name: str) -> logging.Logger:
     """Возвращает объект логера с переданным именем.
