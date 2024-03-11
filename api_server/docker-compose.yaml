@@ -11,8 +11,8 @@ services:
     env_file:
       - ./default.env
     restart: always
-    command: uvicorn app:app --host 0.0.0.0 --port 8080
-    working_dir: /app
+    command: python -m app.main
+    working_dir: /
     networks:
       - network-smart-snip
     ports:

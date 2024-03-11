@@ -8,8 +8,5 @@ RUN mkdir -p domain
 COPY src/domain domain
 RUN mkdir -p service
 COPY src/service service
-COPY src/main.py .
-COPY secrets.txt .
-COPY settings.yaml .
+COPY src/*.py .
 RUN mkdir logs
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]
