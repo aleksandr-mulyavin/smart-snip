@@ -1,5 +1,6 @@
 FROM python:3.12.2-slim
-RUN apt-get update && apt-get install -y --force-yes tesseract-ocr
+RUN apt-get update
+RUN apt-get install -y --force-yes tesseract-ocr tesseract-ocr-rus
 WORKDIR /app
 COPY requirements.txt .
 RUN python3 -m pip install --upgrade pip
