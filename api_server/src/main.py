@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Security, status
 from fastapi.responses import JSONResponse
 
-from .service import auth, logging
+from .service import auth, logging, ocr
 from .domain import api
 
 logger = logging.get_logger(__name__)
@@ -32,8 +32,32 @@ async def image_to_text(
     Returns:
         JSONResponse: response in JSON format.
     """
+    text = ocr.image_to_string(
+        request.image,
+        request.lang,
+    )
+
     return JSONResponse(
-        content='',
+        content=text,
+        status_code=status.HTTP_200_OK,
+    )
+
+
+@app.get('/languages')
+async def get_languages(
+    api_key: str = Security(auth.get_api_key)
+) -> JSONResponse:
+    """Handler for method get_languages.
+
+    Args:
+        api_key_header (str, optional): API key from header.
+          Defaults to Security(api_key_header).
+
+    Returns:
+        JSONResponse: list of supported languages
+    """
+    return JSONResponse(
+        content=ocr.get_languages(),
         status_code=status.HTTP_200_OK,
     )
 
