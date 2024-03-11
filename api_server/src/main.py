@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, Security, status
 from fastapi.responses import JSONResponse
 
 from .service import auth, logging
@@ -20,7 +20,10 @@ async def root() -> str:
 
 
 @app.post('/image_to_text')
-async def image_to_text(request: api.ImageToTextRequest) -> JSONResponse:
+async def image_to_text(
+    request: api.ImageToTextRequest,
+    api_key: str = Security(auth.get_api_key)
+) -> JSONResponse:
     """Handler for image_to_text method.
 
     Parameters:
@@ -29,12 +32,12 @@ async def image_to_text(request: api.ImageToTextRequest) -> JSONResponse:
     Returns:
         JSONResponse: response in JSON format.
     """
+    return JSONResponse(
+        content='',
+        status_code=status.HTTP_200_OK,
+    )
 
-    # авторизация по токену
-    if not auth.check_token(request.api_key):
-        # если не прошла, то вернем ошибку 401
-        logger.error('Authentication failed')
-        return JSONResponse(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            content=api.Error(error='authentication failed').model_dump()
-        )
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host='0.0.0.0', port=8080)
