@@ -3,6 +3,8 @@ from fastapi import Security, HTTPException, status
 from fastapi.security import APIKeyHeader
 
 
+ENV_TOKEN = 'SMART_SNIP_TOKEN'
+
 api_key_header = APIKeyHeader(name='X-API-key')
 
 
@@ -19,7 +21,8 @@ def get_api_key(api_key_header: str = Security(api_key_header)) -> str:
     Returns:
         str: API key
     """
-    if api_key_header == os.getenv('SMART_SNIP_TOKEN'):
+    token = os.getenv(ENV_TOKEN)
+    if api_key_header == ('-' if token is None else token):
         return api_key_header
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

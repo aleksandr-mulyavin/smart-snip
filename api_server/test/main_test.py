@@ -1,7 +1,9 @@
+import os
 from fastapi.testclient import TestClient
 from fastapi import status
 
 from api_server.src.domain import api
+from api_server.src.service.auth import ENV_TOKEN
 from api_server.src.main import app
 
 client = TestClient(app=app)
@@ -45,3 +47,23 @@ def test_failed_authentification_with_wrong_api_key():
     )
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_success_authentification():
+    """
+    """
+    request = api.ImageToTextRequest(
+        image=''
+    )
+    token = os.getenv(ENV_TOKEN)
+    headers = {
+        'X-API-key': '-' if token is None else token
+    }
+
+    response = client.post(
+        url='/image_to_text',
+        headers=headers,
+        json=request.model_dump(),
+    )
+
+    assert response.status_code == status.HTTP_200_OK
