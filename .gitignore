@@ -160,3 +160,4 @@ cython_debug/
 .idea/
 /.pylintrc
 /desktop_client/config.yaml
+/.venv_311/
