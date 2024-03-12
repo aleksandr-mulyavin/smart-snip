@@ -1,12 +1,9 @@
 from pydantic import BaseModel
 
 
-class Auth(BaseModel):
-    api_key: str
-
-
-class ImageToTextRequest(Auth):
+class ImageToTextRequest(BaseModel):
     image: str
+    lang: str = ''
 
 
 class Error(BaseModel):

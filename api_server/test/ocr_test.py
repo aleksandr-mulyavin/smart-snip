@@ -1,7 +1,7 @@
 import base64
 import os
 
-from . import ocr
+from api_server.src.service.ocr import image_to_string
 
 
 def test_recognize_text_from_image(mocker):
@@ -13,11 +13,12 @@ def test_recognize_text_from_image(mocker):
     )
 
     with open(os.path.join('api_server',
+                           'test',
                            'assets',
                            'test.png'), 'rb') as img_file:
         encoded_string = base64.b64encode(img_file.read())
 
-        result = ocr.image_to_string(encoded_string)
+        result = image_to_string(encoded_string)
 
         assert len(result) > 0
 
@@ -25,6 +26,6 @@ def test_recognize_text_from_image(mocker):
 def test_recognize_exception():
     """
     """
-    result = ocr.image_to_string('')
+    result = image_to_string('')
 
     assert result == ''

@@ -1,10 +1,10 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, Security, status
 from fastapi.responses import JSONResponse
 
-import service
-from domain import api
+from .service import auth, logging, ocr
+from .domain import api
 
-logger = service.get_logger(__name__)
+logger = logging.get_logger(__name__)
 
 app = FastAPI()
 
@@ -20,7 +20,10 @@ async def root() -> str:
 
 
 @app.post('/image_to_text')
-async def image_to_text(request: api.ImageToTextRequest) -> JSONResponse:
+async def image_to_text(
+    request: api.ImageToTextRequest,
+    api_key: str = Security(auth.get_api_key)
+) -> JSONResponse:
     """Handler for image_to_text method.
 
     Parameters:
@@ -29,12 +32,36 @@ async def image_to_text(request: api.ImageToTextRequest) -> JSONResponse:
     Returns:
         JSONResponse: response in JSON format.
     """
+    text = ocr.image_to_string(
+        request.image,
+        request.lang,
+    )
 
-    # авторизация по токену
-    if not service.check_token(request.api_key):
-        # если не прошла, то вернем ошибку 401
-        logger.error('Authentication failed')
-        return JSONResponse(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            content=api.Error(error='authentication failed').model_dump()
-        )
+    return JSONResponse(
+        content=text,
+        status_code=status.HTTP_200_OK,
+    )
+
+
+@app.get('/languages')
+async def get_languages(
+    api_key: str = Security(auth.get_api_key)
+) -> JSONResponse:
+    """Handler for method get_languages.
+
+    Args:
+        api_key_header (str, optional): API key from header.
+          Defaults to Security(api_key_header).
+
+    Returns:
+        JSONResponse: list of supported languages
+    """
+    return JSONResponse(
+        content=ocr.get_languages(),
+        status_code=status.HTTP_200_OK,
+    )
+
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host='0.0.0.0', port=8080)

@@ -3,12 +3,15 @@ import base64
 from io import BytesIO
 import pytesseract
 
-import service
+from . import logging
 
-logger = service.get_logger(__name__)
+logger = logging.get_logger(__name__)
 
 
-def image_to_string(image_base64: str) -> str:
+def image_to_string(
+    image_base64: str,
+    lang: str = '',
+) -> str:
     """Recognizes text from image.
 
     Args:
@@ -22,10 +25,15 @@ def image_to_string(image_base64: str) -> str:
         image = Image.open(BytesIO(base64.b64decode(image_base64)))
         result = pytesseract.image_to_string(
             image=image,
-            timeout=5
+            lang='eng+rus' if lang == '' else lang,
+            timeout=5,
         )
     except UnidentifiedImageError as image_error:
         logger.error(str(image_error))
     except RuntimeError as timeout_error:
         logger.error(str(timeout_error))
     return result
+
+
+def get_languages():
+    return pytesseract.get_languages()
