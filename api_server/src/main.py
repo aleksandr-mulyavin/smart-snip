@@ -43,6 +43,31 @@ async def image_to_text(
     )
 
 
+@app.post('/translate_image_text')
+async def translate_image_text(
+    request: api.TranslateImageTextRequest,
+    api_key: str = Security(auth.get_api_key)
+) -> api.TranslateImageTextResponse:
+    """Handler for translate_image_text method.
+
+    Parameters:
+        request (api.TranslateImageTextRequest):
+
+    Returns:
+        api.TranslateImageTextResponse: contains image with translated text.
+    """
+    result = api.TranslateImageTextResponse(
+        image=ocr.translate_image_text(
+                    request.image,
+                    request.to_lang)
+    )
+
+    return JSONResponse(
+        content=result.model_dump(),
+        status_code=status.HTTP_200_OK,
+    )
+
+
 @app.get('/languages')
 async def get_languages(
     api_key: str = Security(auth.get_api_key)
