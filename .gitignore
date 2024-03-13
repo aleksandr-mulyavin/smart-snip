@@ -161,4 +161,4 @@ cython_debug/
 /.pylintrc
 
 # Django secret key
-web_client/secret.py
+/web_client/secret.py
