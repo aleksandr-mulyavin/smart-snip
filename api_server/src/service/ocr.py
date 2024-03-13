@@ -1,7 +1,5 @@
 from PIL import (
     Image,
-    ImageDraw,
-    ImageFont,
     UnidentifiedImageError
 )
 import base64
@@ -47,37 +45,23 @@ def image_to_string(
 
 def translate_image_text(
     image_base64: str,
+    from_lang: str = '',
     to_lang: str = '',
 ) -> str:
 
     image = image_from_base64(image_base64)
 
-    eraser = ImageHandler(image=image)
+    image_handler = ImageHandler(image=image)
 
-    result = pytesseract.image_to_data(image=image)
+    result = pytesseract.image_to_data(
+        image=image,
+        lang='eng+rus' if from_lang == '' else from_lang,
+    )
     data = [[row for row in line.split('\t')] for line in result.split('\n')]
 
-    font = ImageFont.truetype('arial.ttf', 30)
+    image_handler.erase_text(data=data[1:])
 
-    eraser.erase_text(data=data[1:])
-
-    draw = ImageDraw.Draw(image)
-    for row in data[1:]:
-        if len(row) == 12 and row[10] != '-1':
-            text = row[11]
-
-            if text.strip() != '':
-                x1 = int(row[6])
-                y1 = int(row[7])
-                width = int(row[8])
-                height = int(row[9])
-                if width > 10 and height > 10:
-                    draw.text(
-                        xy=(x1, y1),
-                        text=text,
-                        font=font,
-                        fill=(0, 0, 0)
-                    )
+    image_handler.draw_text(data=data[1:])
 
     image.save('result.png')
     buffered = BytesIO()
