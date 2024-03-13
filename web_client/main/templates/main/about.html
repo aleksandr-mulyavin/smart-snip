@@ -1,10 +1,16 @@
 {% extends 'main/page_layout.html' %}
 
-{% block title %}
-    <h1>О нас</h1>
-{% endblock %}
+{% block title %}О нас{% endblock %}
 
 {% block content %}
-    <h1>О нас</h1>
-    <p>О нас</p>
+    <div class="features">
+    <h1>Какое-то название</h1>
+        <label for="текст">Результат извлечения текста:</label>
+        <textarea id="текст" name="текст" rows="5" cols="33">Какой-то текст</textarea>
+    </div>
+    <div class="features">
+        <ul>
+        <a href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
+        </ul>
+    </div>
 {% endblock %}
