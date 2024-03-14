@@ -1,11 +1,32 @@
 {% extends 'main/page_layout.html' %}
 
-{% block title %}Главная страница{% endblock %}
+{% block title %}Приложение{% endblock %}
 
 {% block content %}
     <div class="features">
-        <h1>Главная страница</h1>
-        <p>Какой-то текст</p>
-        <button class="btn btn-warning"> На страницу про нас</button>
+    <h1>Какое-то название</h1>
+        <label for="текст">Результат извлечения текста:</label>
+        <textarea id="текст" name="текст" rows="5" cols="33">{{ t }}</textarea>
+    </div>
+    <div class="features">
+        <button id="submit" class="btn btn-info" type="submit">Перевести текст</button>
+    </div>
+    <div class="features" id="translatedText" style="display: none;">
+        <label for="текст">Результат перевода текста:</label>
+        <textarea id="text" name="text" rows="5" cols="33">{{ tran }}</textarea>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#submit").click(function(e){
+                e.preventDefault(); // Предотвращаем стандартное действие кнопки
+                $("#translatedText").show(); // Показываем блок с текстовым полем
+            });
+        });
+    </script>
+    <div class="features">
+        <ul>
+        <a href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
+        </ul>
     </div>
 {% endblock %}
