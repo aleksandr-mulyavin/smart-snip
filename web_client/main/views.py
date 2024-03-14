@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .translate_text import tran, t
 
 
 def index(request):
@@ -6,4 +7,6 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'main/about.html')
+    s = t()
+    c = tran(s)
+    return render(request, 'main/about.html', {"tran": c, "t": s})
