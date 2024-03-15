@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .translate_text import tran, t
+from .screenshot import result_screenshot
 
 
 def home(request):
@@ -9,7 +10,8 @@ def home(request):
 def app(request):
     s = t()
     c = tran(s)
-    return render(request, 'main/app.html', {"tran": c, "t": s})
+    screenshot = result_screenshot()
+    return render(request, 'main/app.html', {"tran": c, "t": s, "screenshot": screenshot})
 
 
 def about(request):
