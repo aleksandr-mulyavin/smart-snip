@@ -1,10 +1,13 @@
 body {
-    background: #20B2AA;
+    background-image: url("https://wallpaperbat.com/img/323227-green-blue-balls-abstract-wallpaper-green-blue-balls.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 aside {
     float: left;
-    background: #008B8B;
+    background: #2E8B57;
     width: 20%;
     padding: 2.5%;
     height: 100vh;
@@ -73,4 +76,29 @@ textarea {
 label {
   display: block;
   margin-bottom: 10px;
+}
+
+button#submit {
+    position: relative;
+    left: 630px;
+    top: 10px;
+}
+
+textarea#text,
+ label#label-text {
+    position: relative;
+    top: -135px
+}
+
+img#img-app {
+    position: absolute;
+    left: 420px;
+    width: 20%;
+    margin: 50px;
+}
+
+a#download-result{
+    position: relative;
+    left: 930px;
+    top: -28px;
 }
