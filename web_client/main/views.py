@@ -10,8 +10,7 @@ def home(request):
 def app(request):
     s = t()
     c = tran(s)
-    screenshot = result_screenshot()
-    return render(request, 'main/app.html', {"tran": c, "t": s, "screenshot": screenshot})
+    return render(request, 'main/app.html', {"tran": c, "t": s})
 
 
 def about(request):
