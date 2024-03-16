@@ -1,39 +1,81 @@
-body {
-    background-image: url("https://wallpaperbat.com/img/323227-green-blue-balls-abstract-wallpaper-green-blue-balls.jpg");
+/*@media screen and (max-width: 998px) {
+    textarea#text-1 {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    textarea#text-1 {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+
+}*/
+
+
+/*body {
+    background-image: url("https://pibig.info/uploads/posts/2022-11/1669679300_47-pibig-info-p-fon-cherno-fioletovii-oboi-48.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
 }
 
-aside {
+
+/* старое aside {
     float: left;
-    background: #2E8B57;
+    background: #2f1433fa;
     width: 20%;
     padding: 2.5%;
     height: 100vh;
     color: #fff;
     border-right: 5xp solid #4d4d4d;
+    opacity: 0.9;
+}*/
+
+/* новое*/
+/*aside {
+    background: #2f1433fa;
+    overflow: hidden;
 }
 
-aside img {
-    width: 90px;
+aside a {
     float: left;
+    color: #2f1433fa;
+    text-align: center;
+    padding: 5px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    margin-top: 5px;
 }
 
-aside .logo {
-    font-size: 35px;
+/* новое конец*/
+
+/*aside img {
+    width: 70px;
+    float: right;
     margin-left: 10px;
+    margin-top: 3px;
+}*/
+
+/*aside .logo {
+    float: right;
+    font-size: 30px;
+    margin-left: 10px;
+    margin-top: 19px;
     font-weight: bold;
     position: relative;
     top: -5px;
+    color: white;
 }
 
-aside h3 {
+/*aside h3 {
     margin-top: 50px;
     font-size: 25px;
-}
+}*/
 
-aside ul {list-style:none}
+/*aside ul {list-style:none}
 aside ul li {
     color: #fff;
     display: block;
@@ -50,18 +92,43 @@ aside ul li:hover, aside ul a:hover {
 main .features {
     float: left;
     color: #fff;
-    margin-top: 100px;
+    margin-top: 70px;
     text-align: center;
-    width: 75%;
+    width: 100%;
 }
 
 main .features h1 {font-size: 50px;}
 main .features p {max-width: 400px; margin: 20px auto}
 
+/*Новое для отображение элементов*/
+
+/*.box {
+    width: 100%;
+    height: 750px;
+    border: 5px solid #f00;
+    position: relative;
+}
+
+col-4 {
+    position: absolute;
+    left: 45%;
+    top: 50px;
+    color: white;
+}
+
+textarea#text-1 {
+
+    margin: auto;
+
+
+}
+
+
+/*
 label,
 textarea {
   font-size: 0.8rem;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.5%;
 }
 
 textarea {
@@ -80,25 +147,26 @@ label {
 
 button#submit {
     position: relative;
-    left: 630px;
-    top: 10px;
+    left: 34%;
+    top: 18px;
 }
 
 textarea#text,
  label#label-text {
     position: relative;
-    top: -135px
-}
-
-img#img-app {
-    position: absolute;
-    left: 420px;
-    width: 20%;
-    margin: 50px;
+    top: -117px;
 }
 
 a#download-result{
     position: relative;
-    left: 930px;
-    top: -28px;
-}
+    left: 51%;
+    top: -20px;
+}*/
+
+/*img#img-app {
+    position: absolute;
+    left: 22%;
+    width: 20%;
+    margin: 50px auto;
+}*/
+

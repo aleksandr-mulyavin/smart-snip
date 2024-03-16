@@ -1,32 +1,34 @@
 {% extends 'main/page_layout.html' %}
 {% load static %}
+
 {% block title %}Приложение{% endblock %}
 
-{% block content %}
-    <div class="features">
-    <h1>Какое-то название</h1>
-        <label for="текст">Результат извлечения текста:</label>
-        <textarea id="текст" name="текст" rows="5" cols="33">{{ t }}</textarea>
-        <img id="img-app" src="{% static 'main/image/qwerty.jpeg' %}" alt="Лого">
-    </div>
-        <button id="submit" class="btn btn-info" type="submit">Перевести текст</button>
-        <ul>
-            <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
-        </ul>
-    <div class="features" id="translatedText" style="display: none;">
-        <label id="label-text" for="текст">Результат перевода текста:</label>
-        <textarea id="text" name="text" rows="5" cols="33">{{ tran }}</textarea>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $("#submit").click(function(e){
-                e.preventDefault(); // Предотвращаем стандартное действие кнопки
-                $("#translatedText").show(); // Показываем блок с текстовым полем
-            });
-        });
-    </script>
-    <div class="features">
 
+
+{% block content %}
+<div class="row" style="margin-top: 100px; color: white;">
+    <div class="col-4 text-center">
+        <img id="img-app" src="{% static 'main/image/logo_icon.png' %}" style="border-radius: 10px;" class="img-fluid rounded" alt="alternative text">
     </div>
+    <div class="col-4 text-center">Результат извлечения текста:
+        <div>
+            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ t }}</textarea>
+        </div>
+        <div style="margin-top: 50px;">Результат перевода текста:
+            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ tran }}</textarea>
+        </div>
+    </div>
+    <div class="col-4">
+        <div>
+            <ul>
+                <button id="submit" class="btn btn-info" type="submit" style="background-color: #f6fa02f1; margin-top: 50px;">Перевести текст</button>
+            </ul>
+        </div>
+        <div>
+            <ul>
+                <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: #f6fa02f1; margin-top: 100px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}
