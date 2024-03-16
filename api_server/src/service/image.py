@@ -7,6 +7,8 @@ from PIL import (
     ImageFont
 )
 
+from ..domain.ocr import OCRData
+
 
 class ImageHandler():
     """Class for image processing: erase text, draw text.
@@ -44,36 +46,23 @@ class ImageHandler():
         self.primary_color = primary_color
         self.primary_color_array = np.array(primary_color, dtype=np.uint8)
 
-    def erase_text(self, data: list) -> None:
+    def erase_text(self, data: list[OCRData]) -> None:
         """Erases text from the image.
 
         Args:
-            data (list): data returned by pytesseract.image_to_data
-              as the list with fields:
-                level
-                page_num
-                block_num
-                par_num
-                line_num
-                word_num
-                left
-                top	width
-                height
-                conf
-                text
+            data (list[OCRData]): data returned by pytesseract.image_to_data
         """
         self.determine_backround_color()
 
         for row in data:
-            if len(row) == 12 and row[10] != '-1':
-                text = row[11]
+            if row is not None and row.conf != -1:
 
-                if text.strip() != '':
+                if row.text.strip() != '':
 
-                    x = int(row[6])
-                    y = int(row[7])
-                    width = int(row[8])
-                    height = int(row[9])
+                    x = row.left
+                    y = row.top
+                    width = row.width
+                    height = row.height
 
                     if width > 5 and height > 5:
                         box = self.image.crop(
@@ -91,22 +80,17 @@ class ImageHandler():
                             (x, y, x + width, y + height),
                             mask)
 
-    def draw_text(self, data):
+    def draw_text(self, data: list[OCRData]) -> None:
         font = ImageFont.truetype('arial.ttf', 30)
         draw = ImageDraw.Draw(self.image)
-        for row in data[1:]:
-            if len(row) == 12 and row[10] != '-1':
-                text = row[11]
 
-                if text.strip() != '':
-                    x1 = int(row[6])
-                    y1 = int(row[7])
-                    width = int(row[8])
-                    height = int(row[9])
-                    if width > 10 and height > 10:
+        for row in data:
+            if row is not None and row.conf != -1:
+                if row.text.strip() != '':
+                    if row.width > 10 and row.height > 10:
                         draw.text(
-                            xy=(x1, y1),
-                            text=text,
+                            xy=(row.left, row.top),
+                            text=row.text,
                             font=font,
                             fill=(0, 0, 0)
                         )

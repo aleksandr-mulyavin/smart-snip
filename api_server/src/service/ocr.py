@@ -6,10 +6,11 @@ import base64
 from io import BytesIO
 import pytesseract
 
-from . import logging
+from .logging import get_logger
+from ..domain.ocr import OCRData
 from .image import ImageHandler
 
-logger = logging.get_logger(__name__)
+logger = get_logger(__name__)
 
 
 def image_from_base64(image_base64: str) -> Image:
@@ -24,6 +25,7 @@ def image_to_string(
 
     Args:
         image_base64 (str): image in base64 format
+        lang (str): language of the text
 
     Returns:
         str: text from image
@@ -43,30 +45,77 @@ def image_to_string(
     return result
 
 
+def image_to_data(
+    image_base64: str,
+    lang: str = '',
+) -> list[OCRData]:
+    """Recognizes text from image.
+
+    Args:
+        image_base64 (str): image in base64 format
+        lang (str): language of the text
+
+    Returns:
+        list[OCRData]: data from pytesseract
+    """
+    result = []
+    try:
+
+        image = image_from_base64(image_base64)
+        str_data = pytesseract.image_to_data(
+            image=image,
+            lang='eng+rus' if lang == '' else lang,
+            timeout=5,
+        )
+
+        data = [line for line in str_data.split('\n')]
+
+        result = [OCRData.from_str(line) for line in data[1:]]
+        while None in result:
+            result.remove(None)
+
+    except Exception as e:
+        logger.error(str(e))
+
+    return result
+
+
 def translate_image_text(
     image_base64: str,
     from_lang: str = '',
     to_lang: str = '',
 ) -> str:
+    result = ''
 
     image = image_from_base64(image_base64)
 
     image_handler = ImageHandler(image=image)
 
-    result = pytesseract.image_to_data(
-        image=image,
-        lang='eng+rus' if from_lang == '' else from_lang,
-    )
-    data = [[row for row in line.split('\t')] for line in result.split('\n')]
+    try:
 
-    image_handler.erase_text(data=data[1:])
+        str_data = pytesseract.image_to_data(
+            image=image,
+            lang='eng+rus' if from_lang == '' else from_lang,
+        )
 
-    image_handler.draw_text(data=data[1:])
+        data = [line for line in str_data.split('\n')]
 
-    image.save('result.png')
-    buffered = BytesIO()
-    image.save(buffered, format=image.format)
-    return base64.b64encode(buffered.getvalue())
+        image_data = [OCRData.from_str(line) for line in data[1:]]
+
+        image_handler.erase_text(data=image_data)
+
+        image_handler.draw_text(data=image_data)
+
+        image.save('result.png')
+        buffered = BytesIO()
+        image.save(buffered, format=image.format)
+
+        result = base64.b64encode(buffered.getvalue())
+
+    except Exception as e:
+        logger.error(str(e))
+
+    return result
 
 
 def get_languages():
