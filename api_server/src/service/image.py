@@ -81,7 +81,7 @@ class ImageHandler():
                             mask)
 
     def draw_text(self, data: list[OCRData]) -> None:
-        font = ImageFont.truetype('arial.ttf', 30)
+        font = ImageFont.load_default(30)
         draw = ImageDraw.Draw(self.image)
 
         for row in data:
