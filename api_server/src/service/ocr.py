@@ -1,11 +1,20 @@
-from PIL import Image, UnidentifiedImageError
+from PIL import (
+    Image,
+    UnidentifiedImageError
+)
 import base64
 from io import BytesIO
 import pytesseract
 
-from . import logging
+from .logging import get_logger
+from ..domain.ocr import OCRData
+from .image import ImageHandler
 
-logger = logging.get_logger(__name__)
+logger = get_logger(__name__)
+
+
+def image_from_base64(image_base64: str) -> Image:
+    return Image.open(BytesIO(base64.b64decode(image_base64)))
 
 
 def image_to_string(
@@ -16,13 +25,14 @@ def image_to_string(
 
     Args:
         image_base64 (str): image in base64 format
+        lang (str): language of the text
 
     Returns:
         str: text from image
     """
     result = ''
     try:
-        image = Image.open(BytesIO(base64.b64decode(image_base64)))
+        image = image_from_base64(image_base64)
         result = pytesseract.image_to_string(
             image=image,
             lang='eng+rus' if lang == '' else lang,
@@ -32,6 +42,79 @@ def image_to_string(
         logger.error(str(image_error))
     except RuntimeError as timeout_error:
         logger.error(str(timeout_error))
+    return result
+
+
+def image_to_data(
+    image_base64: str,
+    lang: str = '',
+) -> list[OCRData]:
+    """Recognizes text from image.
+
+    Args:
+        image_base64 (str): image in base64 format
+        lang (str): language of the text
+
+    Returns:
+        list[OCRData]: data from pytesseract
+    """
+    result = []
+    try:
+
+        image = image_from_base64(image_base64)
+        str_data = pytesseract.image_to_data(
+            image=image,
+            lang='eng+rus' if lang == '' else lang,
+            timeout=5,
+        )
+
+        data = [line for line in str_data.split('\n')]
+
+        result = [OCRData.from_str(line) for line in data[1:]]
+        while None in result:
+            result.remove(None)
+
+    except Exception as e:
+        logger.error(str(e))
+
+    return result
+
+
+def translate_image_text(
+    image_base64: str,
+    from_lang: str = '',
+    to_lang: str = '',
+) -> str:
+    result = ''
+
+    image = image_from_base64(image_base64)
+
+    image_handler = ImageHandler(image=image)
+
+    try:
+
+        str_data = pytesseract.image_to_data(
+            image=image,
+            lang='eng+rus' if from_lang == '' else from_lang,
+        )
+
+        data = [line for line in str_data.split('\n')]
+
+        image_data = [OCRData.from_str(line) for line in data[1:]]
+
+        image_handler.erase_text(data=image_data)
+
+        image_handler.draw_text(data=image_data)
+
+        image.save('result.png')
+        buffered = BytesIO()
+        image.save(buffered, format=image.format)
+
+        result = base64.b64encode(buffered.getvalue())
+
+    except Exception as e:
+        logger.error(str(e))
+
     return result
 
 
