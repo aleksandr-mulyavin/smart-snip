@@ -13,3 +13,12 @@
 * ```test``` - каталог тестов
   * ```sample_test.py``` - простой пример теста
 * ```requirements.txt``` - импорт зависимостей модуля
+* ```README.md``` - описание модуля (данный файл)
+* ```config.yaml``` - файл конфигурации (в поставку не входит)
+
+## Пример файла конфигурации ```config.yaml```
+```
+server:
+  url: 'https://smart-snip-api.cite.local/'
+  api_key: '12345QazWsx'
+```
