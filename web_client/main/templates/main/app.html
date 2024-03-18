@@ -1,6 +1,6 @@
 {% extends 'main/page_layout.html' %}
 {% load static %}
-
+{% load poll_extras %}
 {% block title %}Приложение{% endblock %}
 
 
@@ -14,19 +14,40 @@
         <div>
             <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ t }}</textarea>
         </div>
-        <div style="margin-top: 50px;">Результат перевода текста:
-            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ tran }}</textarea>
+        <div>
+            <select name="language" class="form-control mx-auto text-center" style="margin-top: 20px; width: 30%;">
+              <option class="mx-auto text-center">Выберите язык</option>
+              {% for lang, name in iso_639_1_languages.items %}
+              <option value="{{ lang }}">{{ name }}</option>
+              {% endfor %}
+            </select>
         </div>
-    </div>
-    <div class="col-4">
+        <p>{{ d }}</p>
+        <p>{{ name }}</p>
         <div>
             <ul>
-                <button id="submit" class="btn btn-info" type="submit" style="background-color: #f6fa02f1; margin-top: 50px;">Перевести текст</button>
+                <button id="submit" class="btn btn-info" type="submit" style="background-color: MediumSpringGreen; margin-top: 50px;">Перевести текст</button>
             </ul>
         </div>
+        <div id="translatedText" style="margin-top: 40px; display: none;">Результат перевода текста:
+                <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ text_to_translate }}</textarea>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#submit").click(function(e){
+                    e.preventDefault(); // Предотвращаем стандартное действие кнопки
+                    $("#translatedText").show(); // Показываем блок с текстовым полем
+                });
+            });
+        </script>
+    </div>
+    <div class="col-4">
+
+
         <div>
             <ul>
-                <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: #f6fa02f1; margin-top: 100px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
+                <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: Aqua; margin-top: 100px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
             </ul>
         </div>
     </div>
