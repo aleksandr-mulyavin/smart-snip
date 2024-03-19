@@ -1,6 +1,6 @@
 {% extends 'main/page_layout.html' %}
 {% load static %}
-{% load poll_extras %}
+{% load filter_all %}
 {% block title %}Приложение{% endblock %}
 
 
@@ -18,19 +18,18 @@
             <select name="language" class="form-control mx-auto text-center" style="margin-top: 20px; width: 30%;">
               <option class="mx-auto text-center">Выберите язык</option>
               {% for lang, name in iso_639_1_languages.items %}
-              <option value="{{ lang }}">{{ name }}</option>
+                <option value="{{ lang }}">{{ name }}</option>
+                 <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{% get_translate_text text=t lang_code=lang %}</textarea>
               {% endfor %}
             </select>
         </div>
-        <p>{{ d }}</p>
-        <p>{{ name }}</p>
         <div>
             <ul>
                 <button id="submit" class="btn btn-info" type="submit" style="background-color: MediumSpringGreen; margin-top: 50px;">Перевести текст</button>
             </ul>
         </div>
         <div id="translatedText" style="margin-top: 40px; display: none;">Результат перевода текста:
-                <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ text_to_translate }}</textarea>
+                <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{% get_translate_text text=t lang_code="ru" %}</textarea>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
