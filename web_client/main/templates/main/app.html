@@ -16,14 +16,14 @@
                 <form method="POST">
                     {% csrf_token %}
                     <table>
-                        {{ form }}
+                        {{ language_and_code }}
                     </table>
                     <input type="submit" value="Подтвердить" class="btn btn-info" style="margin-top: 50px;">
                 </form>
             </div>
 
         <div>Результат перевода текста:
-            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ a }}</textarea>
+            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ result_translate }}</textarea>
         </div>
         <!--<div>
             <ul>
