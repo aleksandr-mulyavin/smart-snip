@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from .translate_text import t, iso_639_1_languages, result, NewUserForm
-from django.http import HttpResponse
 
 
 def home(request):

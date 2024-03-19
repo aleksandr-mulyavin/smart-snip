@@ -1,9 +1,6 @@
 {% extends 'main/page_layout.html' %}
 {% load static %}
-{% load filter_all %}
 {% block title %}Приложение{% endblock %}
-
-
 
 {% block content %}
 <div class="row" style="margin-top: 100px; color: white;">
@@ -15,13 +12,35 @@
             <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ t }}</textarea>
         </div>
         <div>
-            <select name="language" class="form-control mx-auto text-center" style="margin-top: 20px; width: 30%;">
-              <option class="mx-auto text-center">Выберите язык</option>
+            <select id="languageSelect" name="language" class="form-control mx-auto text-center" style="margin-top: 20px; width: 30%;">
+                <option class="mx-auto text-center">Выберите язык</option>
               {% for lang, name in iso_639_1_languages.items %}
                 <option value="{{ lang }}">{{ name }}</option>
-                 <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{% get_translate_text text=t lang_code=lang %}</textarea>
               {% endfor %}
             </select>
+
+            <div class="form">
+            <form method="POST">
+                {% csrf_token %}
+                <table>
+                    {{form}}
+                </table>
+                <input type="submit" value="Отправить">
+            </form>
+        </div>
+        <p>{{ a }}</p>
+                <!--<textarea id="languageDisplay" name="languageDisplay" readonly></textarea>-->
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+            $(document).ready(function() {
+                $('#languageSelect').change(function() {
+                    var selectedLanguage = $(this).val();
+                    $('#languageDisplay').val(selectedLanguage);
+
+                });
+            });
+            </script>
         </div>
         <div>
             <ul>
