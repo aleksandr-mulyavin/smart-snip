@@ -30,4 +30,4 @@ def result_screenshot():
     return im.show()
 
 
-result_screenshot()
+# result_screenshot()
