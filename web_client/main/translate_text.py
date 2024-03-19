@@ -1,42 +1,28 @@
 from translate import Translator
+from django import forms
 
 # Список языков в соответствии со стандартом ISO 639-1
 iso_639_1_languages = {
-    'ab': 'Abkhazian',
-    'aa': 'Afar',
     'af': 'Afrikaans',
     'ak': 'Akan',
     'sq': 'Albanian',
     'am': 'Amharic',
     'ar': 'Arabic',
-    'an': 'Aragonese',
     'hy': 'Armenian',
     'as': 'Assamese',
-    'av': 'Avaric',
-    'ae': 'Avestan',
-    'ay': 'Aymara',
     'az': 'Azerbaijani',
     'bm': 'Bambara',
     'ba': 'Bashkir',
     'eu': 'Basque',
     'be': 'Belarusian',
     'bn': 'Bengali',
-    'bh': 'Bihari languages',
-    'bi': 'Bislama',
     'bs': 'Bosnian',
-    'br': 'Breton',
     'bg': 'Bulgarian',
     'my': 'Burmese',
     'ca': 'Catalan',
-    'ch': 'Chamorro',
-    'ce': 'Chechen',
     'ny': 'Chichewa',
     'zh': 'Chinese',
-    'cu': 'Church Slavic',
-    'cv': 'Chuvash',
-    'kw': 'Cornish',
     'co': 'Corsican',
-    'cr': 'Cree',
     'hr': 'Croatian',
     'cs': 'Czech',
     'da': 'Danish',
@@ -51,7 +37,6 @@ iso_639_1_languages = {
     'fj': 'Fijian',
     'fi': 'Finnish',
     'fr': 'French',
-    'ff': 'Fulah',
     'gd': 'Gaelic',
     'gl': 'Galician',
     'lg': 'Ganda',
@@ -64,36 +49,24 @@ iso_639_1_languages = {
     'ht': 'Haitian',
     'ha': 'Hausa',
     'he': 'Hebrew',
-    'hz': 'Herero',
     'hi': 'Hindi',
-    'ho': 'Hiri Motu',
-    'hu': 'Hungarian',
-    'ia': 'Interlingua',
     'id': 'Indonesian',
-    'ie': 'Interlingue',
     'ga': 'Irish',
     'ig': 'Igbo',
-    'ik': 'Inupiaq',
-    'io': 'Ido',
     'is': 'Icelandic',
     'it': 'Italian',
     'iu': 'Inuktitut',
     'ja': 'Japanese',
-    'jv': 'Javanese',
-    'kl': 'Kalaallisut',
     'kn': 'Kannada',
-    'kr': 'Kanuri',
     'ks': 'Kashmiri',
     'kk': 'Kazakh',
     'km': 'Central Khmer',
     'ki': 'Kikuyu, Gikuyu',
     'rw': 'Kinyarwanda',
     'ky': 'Kirghiz',
-    'kv': 'Komi',
     'kg': 'Kongo',
     'ko': 'Korean',
     'ku': 'Kurdish',
-    'kj': 'Kuanyama',
     'la': 'Latin',
     'lb': 'Luxembourgish',
     'lg': 'Ganda',
@@ -101,9 +74,7 @@ iso_639_1_languages = {
     'ln': 'Lingala',
     'lo': 'Lao',
     'lt': 'Lithuanian',
-    'lu': 'Luba-Katanga',
     'lv': 'Latvian',
-    'gv': 'Manx',
     'mk': 'Macedonian',
     'mg': 'Malagasy',
     'ms': 'Malay',
@@ -111,39 +82,22 @@ iso_639_1_languages = {
     'mt': 'Maltese',
     'mi': 'Maori',
     'mr': 'Marathi',
-    'mh': 'Marshallese',
     'mn': 'Mongolian',
-    'na': 'Nauru',
-    'nv': 'Navajo, Navaho',
-    'nd': 'Northern Ndebele',
     'ne': 'Nepali',
-    'ng': 'Ndonga',
     'nb': 'Norwegian Bokmål',
     'nn': 'Norwegian Nynorsk',
     'no': 'Norwegian',
-    'ii': 'Sichuan Yi, Nuosu',
-    'nr': 'Southern Ndebele',
-    'oc': 'Occitan',
-    'oj': 'Ojibwa',
-    'cu': 'Church Slavic',
-    'om': 'Oromo',
     'or': 'Oriya',
-    'os': 'Ossetian, Ossetic',
-    'pa': 'Panjabi, Punjabi',
-    'pi': 'Pali',
     'fa': 'Persian',
     'pl': 'Polish',
     'ps': 'Pashto, Pushto',
     'pt': 'Portuguese',
-    'qu': 'Quechua',
-    'rm': 'Romansh',
     'rn': 'Rundi',
     'ro': 'Romanian, Moldavian, Moldovan',
     'ru': 'Russian',
     'sa': 'Sanskrit',
     'sc': 'Sardinian',
     'sd': 'Sindhi',
-    'se': 'Northern Sami',
     'sm': 'Samoan',
     'sg': 'Sango',
     'sr': 'Serbian',
@@ -178,29 +132,34 @@ iso_639_1_languages = {
     'uk': 'Ukrainian',
     'ur': 'Urdu',
     'uz': 'Uzbek',
-    've': 'Venda',
     'vi': 'Vietnamese',
-    'vo': 'Volapük',
-    'wa': 'Walloon',
     'cy': 'Welsh',
     'wo': 'Wolof',
     'fy': 'Western Frisian',
     'xh': 'Xhosa',
     'yi': 'Yiddish',
     'yo': 'Yoruba',
-    'za': 'Zhuang, Chuang',
     'zu': 'Zulu'
 }
 
 
 def t():
+    """Временная функция. Вместо нее должен быть извлеченный текст.
+    """
     a = 'Work'
     return a
 
 
 def result(func, lang_code, from_="autodetect"):
-    # lang_code = "ru"
-    # from_ = "autodetect"
+    """Позфоляет перевести текст. На вход подается текст и код языка, на который нужно перевести.
+    """
     translator = Translator(to_lang=lang_code, from_lang=from_)  # "autodetect" # вот сюда добавить выбранный язык
     text_to_translate = translator.translate(func)
     return text_to_translate
+
+
+class NewUserForm(forms.Form):
+    """
+    Создает форму для выбора из выпадающего списка названия языков
+    """
+    num = forms.ChoiceField(choices=iso_639_1_languages)
