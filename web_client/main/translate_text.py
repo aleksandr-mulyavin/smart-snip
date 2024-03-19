@@ -150,7 +150,7 @@ def t():
     return a
 
 
-def result(func, lang_code, from_="autodetect"):
+def get_to_text_translate(func, lang_code, from_="autodetect"):
     """Позфоляет перевести текст. На вход подается текст и код языка, на который нужно перевести.
     """
     translator = Translator(to_lang=lang_code, from_lang=from_)  # "autodetect" # вот сюда добавить выбранный язык
@@ -158,8 +158,8 @@ def result(func, lang_code, from_="autodetect"):
     return text_to_translate
 
 
-class NewUserForm(forms.Form):
+class DictLanguage(forms.Form):
     """
     Создает форму для выбора из выпадающего списка названия языков
     """
-    num = forms.ChoiceField(choices=iso_639_1_languages)
+    lang_elements = forms.ChoiceField(choices=iso_639_1_languages, label='')
