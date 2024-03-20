@@ -160,5 +160,7 @@ cython_debug/
 .idea/
 /.pylintrc
 
+*.env
+
 # Django secret key
 web_client/web_client/secret.py
