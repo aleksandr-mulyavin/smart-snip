@@ -5,24 +5,21 @@
 {% block content %}
 <div class="row" style="margin-top: 100px; color: white;">
     <div class="col-4 text-center">
-        <img id="img-app" src="{% static 'main/image/logo_icon.png' %}" style="border-radius: 10px;" class="img-fluid rounded" alt="alternative text">
+        <input type="submit" value="Сделать скриншот" class="btn btn-info" style="background-color: #FF69B4">
+        <img id="img-app" src="{% static 'main/image/logo_icon.png' %}" style="border-radius: 10px; margin-top: 30px;" class="img-fluid rounded" alt="alternative text">
     </div>
     <div class="col-4 text-center">Результат извлечения текста:
         <div>
             <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ t }}</textarea>
         </div>
-
-            <div class="form" style="margin-top: 50px;">
-                <form method="POST">
-                    {% csrf_token %}
-                    <table>
-                        {{ language_and_code }}
-                    </table>
-                    <input type="submit" value="Подтвердить" class="btn btn-info" style="margin-top: 50px;">
-                </form>
-            </div>
-
-        <div>Результат перевода текста:
+        <div class="form" style="margin-top: 30px;">
+            <form method="POST" style="border-radius: 10px;">
+                {% csrf_token %}
+                    {{ language_and_code }}
+                <input type="submit" value="Подтвердить" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A">
+            </form>
+        </div>
+        <div style="margin-top: 30px;">Результат перевода текста:
             <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ result_translate }}</textarea>
         </div>
         <!--<div>
@@ -44,8 +41,6 @@
         </script>-->
     </div>
     <div class="col-4">
-
-
         <div>
             <ul>
                 <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: Aqua; margin-top: 100px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
