@@ -2,7 +2,12 @@ from fastapi import FastAPI, Security, status
 from fastapi.responses import JSONResponse
 
 from .service import auth, logging, ocr
-from .domain import api
+from .domain.api import (
+    ImageToTextRequest,
+    ImageToDataResponse,
+    TranslateImageTextRequest,
+    TranslateImageTextResponse
+)
 
 logger = logging.get_logger(__name__)
 
@@ -21,13 +26,13 @@ async def root() -> str:
 
 @app.post('/image_to_text')
 async def image_to_text(
-    request: api.ImageToTextRequest,
+    request: ImageToTextRequest,
     api_key: str = Security(auth.get_api_key)
 ) -> JSONResponse:
     """Handler for image_to_text method.
 
     Parameters:
-        request (api.ImageToTextRequest):
+        request (ImageToTextRequest):
 
     Returns:
         JSONResponse: response in JSON format.
@@ -39,6 +44,57 @@ async def image_to_text(
 
     return JSONResponse(
         content=text,
+        status_code=status.HTTP_200_OK,
+    )
+
+
+@app.post('/image_to_data')
+async def image_to_data(
+    request: ImageToTextRequest,
+    api_key: str = Security(auth.get_api_key)
+) -> ImageToDataResponse:
+    """Handler for image_to_data method.
+
+    Parameters:
+        request (ImageToTextRequest):
+
+    Returns:
+        ImageToDataResponse: response in JSON format.
+    """
+    ocr_data = ocr.image_to_data(
+        request.image,
+        request.lang,
+    )
+
+    return JSONResponse(
+        content=ImageToDataResponse(
+            image_data=ocr_data
+        ).model_dump(),
+        status_code=status.HTTP_200_OK,
+    )
+
+
+@app.post('/translate_image_text')
+async def translate_image_text(
+    request: TranslateImageTextRequest,
+    api_key: str = Security(auth.get_api_key)
+) -> TranslateImageTextResponse:
+    """Handler for translate_image_text method.
+
+    Parameters:
+        request (TranslateImageTextRequest):
+
+    Returns:
+        TranslateImageTextResponse: contains image with translated text.
+    """
+    result = TranslateImageTextResponse(
+        image=ocr.translate_image_text(
+                    request.image,
+                    request.to_lang)
+    )
+
+    return JSONResponse(
+        content=result.model_dump(),
         status_code=status.HTTP_200_OK,
     )
 
