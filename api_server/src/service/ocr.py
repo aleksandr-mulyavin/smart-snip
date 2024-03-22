@@ -9,6 +9,7 @@ import pytesseract
 from .logging import get_logger
 from ..domain.ocr import OCRData
 from .image import ImageHandler
+from .translating import Translator
 
 logger = get_logger(__name__)
 
@@ -89,7 +90,10 @@ def translate_image_text(
 
     image = image_from_base64(image_base64)
 
-    image_handler = ImageHandler(image=image)
+    image_handler = ImageHandler(
+        image=image,
+        translator=Translator(from_lang=from_lang, to_lang=to_lang)
+    )
 
     try:
 
@@ -102,11 +106,9 @@ def translate_image_text(
 
         image_data = [OCRData.from_str(line) for line in data[1:]]
 
-        image_handler.erase_text(data=image_data)
-
-        image_handler.draw_text(data=image_data)
-
+        image_handler.translate_text(data=image_data)
         image.save('result.png')
+
         buffered = BytesIO()
         image.save(buffered, format=image.format)
 
