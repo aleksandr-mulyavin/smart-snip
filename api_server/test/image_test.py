@@ -38,7 +38,7 @@ def test_determine_backround_color():
         translator=Translator(from_lang='eng', to_lang='rus')
     )
 
-    result = image_handler.determine_colors(
+    result = image_handler._determine_colors(
         (0, 0, 50, 40)
     )
 

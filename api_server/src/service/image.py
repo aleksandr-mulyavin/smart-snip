@@ -20,7 +20,7 @@ class ImageHandler():
         self.image = image
         self.translator = translator
 
-    def determine_colors(self, coords: tuple | None) -> tuple:
+    def _determine_colors(self, coords: tuple | None) -> tuple:
         """Determines the background color of the image using KMeans.
         """
         # prepare image for KMeans
@@ -46,8 +46,6 @@ class ImageHandler():
             [(percent, color) for (percent, color) in zip(hist, centroids)],
             reverse=True
         )
-
-        logger.info(f'colors: {colors}')
 
         if len(colors) > 1:
             background_color = colors[0][1]
@@ -82,10 +80,15 @@ class ImageHandler():
 
                 if row.text.strip() != '':
 
-                    if row.width > 10 and row.height > 10:
-                        text = self.translator.translate(row.text)
+                    if (row.width > 10
+                            and row.height > 5
+                            and row.conf > 15
+                            and any([s.isalpha() for s in row.text])):
 
-                        back_color, text_color = self.determine_colors((
+                        text = self.translator.translate(row.text)
+                        logger.info(text)
+
+                        back_color, text_color = self._determine_colors((
                             row.left,
                             row.top,
                             row.left + row.width,
@@ -109,18 +112,31 @@ class ImageHandler():
                         )
 
     def __clear_block(self, color, block):
-        box = self.image.crop(block)
+        if block[0] > 0 and block[1] > 0:
+            cleaning_block = (
+                block[0] - 1,
+                block[1] - 1,
+                block[2],
+                block[3]
+            )
+        else:
+            cleaning_block = block
+
+        box = self.image.crop(cleaning_block)
+        # create grayscale mask
         mask = box.convert('L').point(
             lambda c: 0 if c > 200 else 255)
-        mask = self.__blur(
-            self.__dilate(mask, 1))
+        # dilate and blur the mask
+        mask = self.__blur(self.__dilate(mask, 2), 2)
+        # create the box and fill it with the background color
         box = Image.fromarray(
             np.ones_like(
                 box, dtype=np.uint8
             ) * color)
+        # erase text
         self.image.paste(
             box,
-            block,
+            cleaning_block,
             mask)
 
     def __get_font(self, draw: ImageDraw, text: str, width: int) -> int:
