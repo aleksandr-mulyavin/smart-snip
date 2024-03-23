@@ -5,7 +5,14 @@
 {% block content %}
 <div class="row" style="margin-top: 100px; color: white;">
     <div class="col-4 text-center">
-        <input type="submit" value="Сделать скриншот" class="btn btn-info" style="background-color: #FF69B4">
+        <!--<input type="submit" value="Сделать скриншот" class="btn btn-info" style="background-color: #FF69B4">-->
+        <div>
+            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 40px;">
+                {% csrf_token %}
+                <p><input type="file" name="file_upload" class="btn btn-info" style="background-color: #FF69B4"></p>
+                <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4">Загрузить</button></p>
+            </form>
+        </div>
         <img id="img-app" src="{% static 'main/image/logo_icon.png' %}" style="border-radius: 10px; margin-top: 30px;" class="img-fluid rounded" alt="alternative text">
     </div>
     <div class="col-4 text-center">Результат извлечения текста:
