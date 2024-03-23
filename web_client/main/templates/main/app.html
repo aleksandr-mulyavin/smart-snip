@@ -9,25 +9,27 @@
         <div>
             <form action="" method="post" enctype="multipart/form-data" style="margin-top: 40px;">
                 {% csrf_token %}
-                <p><input type="file" name="file_upload" class="btn btn-info" style="background-color: #FF69B4"></p>
-                <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4">Загрузить</button></p>
+                <input type="hidden" name="form_type" value="upload_file">
+                {{ upload_file.as_p }}
+                <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Загрузить</button></p>
             </form>
         </div>
-        <img id="img-app" src="{% static 'main/image/logo_icon.png' %}" style="border-radius: 10px; margin-top: 30px;" class="img-fluid rounded" alt="alternative text">
+        <img id="img-app" src="{% static 'main/image/logo_icon.png' %}" style="border-radius: 3px; margin-top: 30px;" class="img-fluid rounded" alt="alternative text">
     </div>
     <div class="col-4 text-center">Результат извлечения текста:
         <div>
-            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ t }}</textarea>
+            <textarea style="letter-spacing: 0.5%; width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 3px;" class="form-control">{{ t }}</textarea>
         </div>
-        <div class="form" style="margin-top: 30px;">
-            <form method="POST" style="border-radius: 10px;">
+        <div class="form" style="margin-top: 90px;">
+            <form method="POST" style="border-radius: 3px;">
                 {% csrf_token %}
-                    {{ language_and_code }}
-                <input type="submit" value="Подтвердить" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A">
+                <input type="hidden" name="form_type" value="change_language">
+                {{ language_and_code }}
+                <input type="submit" value="Подтвердить выбор языка" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;">
             </form>
         </div>
-        <div style="margin-top: 30px;">Результат перевода текста:
-            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ result_translate }}</textarea>
+        <div style="margin-top: 90px;">Результат перевода текста:
+            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 3px;" class="form-control">{{ result_translate }}</textarea>
         </div>
         <!--<div>
             <ul>
