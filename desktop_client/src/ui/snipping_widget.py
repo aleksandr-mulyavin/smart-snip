@@ -5,48 +5,82 @@ from PIL.Image import Image
 
 
 class SnippingWidget(QtWidgets.QMainWindow):
-    closed = QtCore.pyqtSignal()
-    before_closed = QtCore.pyqtSignal()
+    """
+    Виджет выделения области экрана
+    """
+    # Определение сигналов Qt (событий)
+    on_snipping_start = QtCore.pyqtSignal()
+    on_snipping_finish = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
+        """
+        Конструктор класса
+        """
         super(SnippingWidget, self).__init__(parent)
+
+        # Настройка экрана для области выделения
         self.setAttribute(QtCore.Qt.WA_NoSystemBackground, True)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.setStyleSheet("background:transparent;")
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
-        self.outsideSquareColor = "red"
-        self.squareThickness = 2
+        # Параметры для области выделения
+        self._outsideSquareColor = "red"
+        self._squareThickness = 2
+        self._start_point = QtCore.QPoint()
+        self._end_point = QtCore.QPoint()
 
-        self.start_point = QtCore.QPoint()
-        self.end_point = QtCore.QPoint()
+        # Выделенное изображение
+        self._image = None
 
-        self.__image = None
+    def start_snipping(self):
+        self.showFullScreen()
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CrossCursor)
+        self.on_snipping_start.emit()
 
     def mousePressEvent(self, event):
-        self.start_point = event.pos()
-        self.end_point = event.pos()
+        """
+        Обработка события начала выделения
+        :param event: Данные события
+        """
+        self._image = None
+        self._start_point = event.pos()
+        self._end_point = event.pos()
         self.update()
 
     def mouseMoveEvent(self, event):
-        self.end_point = event.pos()
+        """
+        Обработка события процесса выделения
+        :param event: Данные события
+        """
+        self._end_point = event.pos()
         self.update()
 
-    def mouseReleaseEvent(self, QMouseEvent):
-        rect = QtCore.QRect(self.start_point, self.end_point).normalized()
-        self.__image = ImageGrab.grab(bbox=rect.getCoords())
+    def mouseReleaseEvent(self, event):
+        """
+        Обработка события окончания выделения
+        :param event: Данные события
+        """
+        # Получение изображения из области выделения
+        rect = QtCore.QRect(self._start_point, self._end_point).normalized()
+        self._image = ImageGrab.grab(bbox=rect.getCoords())
         QtWidgets.QApplication.restoreOverrideCursor()
 
-        self.before_closed.emit()
+        # Скрытие области выделения
+        self.on_snipping_finish.emit()
         self.hide()
-        self.closed.emit()
 
-        self.start_point = QtCore.QPoint()
-        self.end_point = QtCore.QPoint()
+        # Обнуление позиций
+        self._start_point = QtCore.QPoint()
+        self._end_point = QtCore.QPoint()
 
     def paintEvent(self, event):
+        """
+        Обработка события отрисовки виджета
+        :param event: Данные события
+        """
         trans = QtGui.QColor(22, 100, 233)
-        r = QtCore.QRectF(self.start_point, self.end_point).normalized()
+        r = QtCore.QRectF(self._start_point, self._end_point).normalized()
         qp = QtGui.QPainter(self)
         trans.setAlphaF(0.2)
         qp.setBrush(trans)
@@ -58,12 +92,16 @@ class SnippingWidget(QtWidgets.QMainWindow):
         qp.drawPath(r_path)
         qp.setPen(
             QtGui.QPen(
-                QtGui.QColor(self.outsideSquareColor),
-                self.squareThickness)
+                QtGui.QColor(self._outsideSquareColor),
+                self._squareThickness)
         )
         trans.setAlphaF(0)
         qp.setBrush(trans)
         qp.drawRect(r)
 
-    def get_image(self) -> Image:
-        return self.__image
+    def get_selected_image(self) -> Image | None:
+        """
+        Получение выделенного изображения
+        :return: Выделенное изображение
+        """
+        return self._image
