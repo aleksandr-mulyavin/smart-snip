@@ -1,1 +1,1 @@
-from .image_viewer import open_stand_image_viewer
+from .snipper_controller import SnipperController
