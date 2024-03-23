@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .translate_text import t, iso_639_1_languages, get_to_text_translate, DictLanguage
+from .translate_text import t, iso_639_1_languages, get_to_text_translate
+from .forms import UploadFileForm, DictLanguage
 
 
 def home(request):
@@ -18,23 +19,25 @@ def handle_uploaded_file(f):
 def app(request):
     s = t()  # временная функция с текстом
     result_translate = get_to_text_translate(s, 'ru')  # функция с переводом
-    if request.method == "POST":
-        lang_elements = request.POST.get("lang_elements")
-        output = lang_elements
-        result_translate = get_to_text_translate(s, output)  # функция с переводом
-        language_and_code = DictLanguage()  # форма с ниспадающим списком
-        handle_uploaded_file(request.FILES["file_upload"])  # получение загруженного файла пользователем
-        return render(request, 'main/app.html', {"language_and_code": language_and_code,
-                                                 "result_translate": result_translate,
-                                                 "t": s,
-                                                 "iso_639_1_languages": iso_639_1_languages})
+    language_and_code = DictLanguage()  # форма с ниспадающим списком
+    upload_file = UploadFileForm()
 
-    else:
-        language_and_code = DictLanguage()
+    if request.method == "POST":
+        form_type = request.POST.get("form_type")
+        if form_type == 'upload_file':
+            upload_file = UploadFileForm(request.POST, request.FILES)
+            if upload_file.is_valid():
+                handle_uploaded_file(upload_file.cleaned_data['file'])  # получение загруженного файла пользователем
+        elif form_type == 'change_language':
+            lang_elements = request.POST.get("lang_elements")
+            output = lang_elements
+            result_translate = get_to_text_translate(s, output)  # функция с переводом
+
     return render(request, 'main/app.html', {"language_and_code": language_and_code,
                                              "result_translate": result_translate,
                                              "t": s,
-                                             "iso_639_1_languages": iso_639_1_languages})
+                                             "iso_639_1_languages": iso_639_1_languages,
+                                             "upload_file": upload_file})
 
 
 def about(request):
