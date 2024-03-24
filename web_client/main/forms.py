@@ -3,7 +3,7 @@ from .translate_text import iso_639_1_languages
 
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField(label="")
+    file = forms.ImageField(label="")
 
 
 class DictLanguage(forms.Form):
