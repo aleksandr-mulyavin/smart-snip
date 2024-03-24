@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .translate_text import t, iso_639_1_languages, get_to_text_translate, DictLanguage
+from .translate_image import TranslateImageHandler
 
 
 def home(request):
@@ -25,6 +26,12 @@ def app(request):
                                                                     "result_translate": result_translate,
                                                                     "t": s,
                                                                     "iso_639_1_languages": iso_639_1_languages})
+
+
+def translate_image(request):
+    return TranslateImageHandler(
+        request=request
+    ).process_request()
 
 
 def about(request):
