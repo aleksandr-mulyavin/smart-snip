@@ -14,7 +14,7 @@
                 <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Загрузить</button></p>
             </form>
         </div>
-        <img id="img-app" src="{% static 'main/image/logo_icon.png' %}" style="border-radius: 3px; margin-top: 30px;" class="img-fluid rounded" alt="alternative text">
+        <img id="img-app" src="{% static file_path_static %}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="Загрузите изображение">
     </div>
     <div class="col-4 text-center">Результат извлечения текста:
         <div>
@@ -31,23 +31,6 @@
         <div style="margin-top: 90px;">Результат перевода текста:
             <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 3px;" class="form-control">{{ result_translate }}</textarea>
         </div>
-        <!--<div>
-            <ul>
-                <button id="submit" class="btn btn-info" type="submit" style="background-color: MediumSpringGreen; margin-top: 50px;">Перевести текст</button>
-            </ul>
-        </div>
-        <div id="translatedText" style="margin-top: 40px; display: none;">Результат перевода текста:
-            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 10px;" class="form-control">{{ a }}</textarea>
-        </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script>
-            $(document).ready(function(){
-                $("#submit").click(function(e){
-                    e.preventDefault(); // Предотвращаем стандартное действие кнопки
-                    $("#translatedText").show(); // Показываем блок с текстовым полем
-                });
-            });
-        </script>-->
     </div>
     <div class="col-4">
         <div>
