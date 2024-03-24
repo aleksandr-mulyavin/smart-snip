@@ -26,8 +26,9 @@ def result_screenshot():
     maxim_y = max(first_y, second_y)
 
     im = (ImageGrab.grab(bbox=(minim_x, minim_y, maxim_x, maxim_y)))
-    # im.save("temp_files/img.jpg")
-    return im.show()
+    im.show()  # при таком виде, если запускать отдельно этот код, то все работает
+
+    return im.save("main/temp_files/img.jpg")
 
 
 # result_screenshot()
