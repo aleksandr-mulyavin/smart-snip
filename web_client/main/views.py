@@ -1,6 +1,4 @@
 from django.shortcuts import render
-
-from .screenshot import result_screenshot
 from .translate_text import t, iso_639_1_languages, get_to_text_translate
 from .forms import UploadFileForm, DictLanguage
 
@@ -29,7 +27,6 @@ def app(request):
     language_and_code = DictLanguage()  # форма с ниспадающим списком
     upload_file = UploadFileForm()
     file_path_static = None
-    # screenshot = result_screenshot() # запуск функции со скриншотом
 
     if request.method == "POST":
         form_type = request.POST.get("form_type")
@@ -48,7 +45,7 @@ def app(request):
                                              "t": s,
                                              "iso_639_1_languages": iso_639_1_languages,
                                              "upload_file": upload_file,
-                                             "file_path_static": file_path_static}) # Убрала временно "screenshot": screenshot. Скриншот убираем или настраиваем и оставляем
+                                             "file_path_static": file_path_static})
 
 
 def about(request):

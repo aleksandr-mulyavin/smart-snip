@@ -5,14 +5,6 @@
 {% block content %}
 <div class="row" style="margin-top: 100px; color: white;">
     <div class="col-4 text-center">
-        <!--<input type="submit" value="Сделать скриншот" class="btn btn-info" style="background-color: #FF69B4"> СТАРАЯ ВЕРСИЯ, НЕ НАСТРОЕНА-->
-        <!--<div>
-            <form action="" method="post" style="margin-top: 40px;">
-                {% csrf_token %}
-                {{ screenshot.as_p }}
-                <p><button type="submit" name="form_type" value="screenshot_file" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Сделать скриншот</button></p>
-            </form>
-        </div> ВТОРАЯ ВЕРСИЯ. ЗДЕСЬ КНОПКА С ЗАПУСКОМ ДЛЯ СКРИНШОТЕРА-->
         <div>
             <form action="" method="post" enctype="multipart/form-data" style="margin-top: 40px;">
                 {% csrf_token %}
