@@ -15,7 +15,7 @@ class ImageUploadForm(forms.Form):
     )
 
 
-class TranslateImageHandler():
+class APIImageHandler():
     def __init__(self, request):
         self.request = request
 
