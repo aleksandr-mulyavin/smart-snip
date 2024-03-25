@@ -10,8 +10,9 @@ from .models import (
 
 
 class APIImageHandler():
-    def __init__(self, image_path: str):
+    def __init__(self, image_path: str = None, encoded_image: str = None):
         self.image_path = image_path
+        self.encoded_image = encoded_image
         self.api_config = self.__get_config()
 
     def image_to_text(self) -> str:
@@ -58,9 +59,12 @@ class APIImageHandler():
 
     def __encode_image(self) -> str:
         encoded_image = ''
-        with open(self.image_path, 'rb') as f:
-            image_data = f.read()
-            encoded_image = base64.b64encode(image_data).decode('utf-8')
+        if self.encoded_image is None and self.image_path is not None:
+            with open(self.image_path, 'rb') as f:
+                image_data = f.read()
+                encoded_image = base64.b64encode(image_data).decode('utf-8')
+        else:
+            encoded_image = self.encoded_image
         return encoded_image
 
     @staticmethod
