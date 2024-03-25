@@ -52,14 +52,21 @@ def app(request):
         elif form_type == 'change_language':
             lang_elements = request.POST.get("lang_elements")
             output = lang_elements
-            result_translate = get_to_text_translate(s, output)  # функция с переводом
+            # функция с переводом
+            result_translate = get_to_text_translate(s, output)
 
-    return render(request, 'main/app.html', {"language_and_code": language_and_code,
-                                             "result_translate": result_translate,
-                                             "t": s,
-                                             "iso_639_1_languages": iso_639_1_languages,
-                                             "upload_file": upload_file,
-                                             "file_path_static": file_path_static})
+    return render(
+        request,
+        'main/app.html',
+        {
+            "language_and_code": language_and_code,
+            "result_translate": result_translate,
+            "t": s,
+            "iso_639_1_languages": iso_639_1_languages,
+            "upload_file": upload_file,
+            "file_path_static": file_path_static
+        }
+    )
 
 
 def about(request):
