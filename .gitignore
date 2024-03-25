@@ -160,6 +160,9 @@ cython_debug/
 .idea/
 /.pylintrc
 
+/desktop_client/config.yaml
+/.venv_311/
+
 *.env
 
 # Django secret key

@@ -1,0 +1,26 @@
+version: '3'
+services:
+  gpt-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    image: smart-snip-api:latest
+    container_name: smart-snip-api
+    env_file:
+      - ./default.env
+    restart: always
+    command: python -m app.main
+    working_dir: /
+    networks:
+      - network-smart-snip
+    ports:
+      - "8088:8080"
+    volumes:
+      - logs:/app/logs
+
+volumes:
+  logs: 
+networks:
+  network-smart-snip:
