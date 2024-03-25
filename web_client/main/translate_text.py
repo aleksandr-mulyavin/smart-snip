@@ -3,6 +3,7 @@ from django import forms
 
 # Список языков в соответствии со стандартом ISO 639-1
 iso_639_1_languages = {
+    'ru': 'Russian',
     'af': 'Afrikaans',
     'ak': 'Akan',
     'sq': 'Albanian',
@@ -94,7 +95,6 @@ iso_639_1_languages = {
     'pt': 'Portuguese',
     'rn': 'Rundi',
     'ro': 'Romanian, Moldavian, Moldovan',
-    'ru': 'Russian',
     'sa': 'Sanskrit',
     'sc': 'Sardinian',
     'sd': 'Sindhi',

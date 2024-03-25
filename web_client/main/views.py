@@ -17,9 +17,11 @@ def handle_uploaded_file(f):
         for chunk in f.chunks():
             destination.write(chunk)
     if file_path:
-        return file_path[12:]  # Получаем путь к static, куда сохранился файл для отображения на веб-сайте
+        # Получаем путь к файлу и путь к static,
+        # куда сохранился файл для отображения на веб-сайте
+        return file_path, file_path[12:]
     else:
-        return None
+        return None, None
 
 
 def app(request):
@@ -34,7 +36,13 @@ def app(request):
         if form_type == 'upload_file':
             upload_file = UploadFileForm(request.POST, request.FILES)
             if upload_file.is_valid():
-                file_path_static = handle_uploaded_file(upload_file.cleaned_data['file'])  # получение загруженного файла пользователем
+                # получение загруженного файла пользователем
+                file_path, file_path_static = handle_uploaded_file(
+                    upload_file.cleaned_data['file']
+                )
+                if file_path is not None:
+                    image_handler = APIImageHandler(image_path=file_path)
+                    s = image_handler.image_to_text()
 
         elif form_type == 'change_language':
             lang_elements = request.POST.get("lang_elements")
@@ -47,12 +55,6 @@ def app(request):
                                              "iso_639_1_languages": iso_639_1_languages,
                                              "upload_file": upload_file,
                                              "file_path_static": file_path_static})
-
-
-def translate_image(request):
-    return APIImageHandler(
-        request=request
-    ).translate_image()
 
 
 def about(request):
