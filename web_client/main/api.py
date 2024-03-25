@@ -27,7 +27,7 @@ class APIImageHandler():
             )
         )
 
-        return response.text
+        return response.json()
 
     def translate_image(self) -> str:
         encoded_image = self.__encode_image()
