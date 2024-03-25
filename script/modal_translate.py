@@ -17,7 +17,7 @@ def paste_text():
 # Функция для обработки нажатия кнопки
 def translate_text():
     translator = Translator()
-    translated_text = translator.translate(entry_text.get(), dest=selected_language.get()).text
+    translated_text = translator.translate(entry_text.get("1.0", "end"), dest=selected_language.get()).text
     output_text.delete(1.0, tk.END)
     output_text.insert(tk.END, translated_text)
 
