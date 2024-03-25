@@ -26,7 +26,7 @@ root = tk.Tk()
 root.title("Выберите язык и введите/вставьте текст, который нужно перевести: ")
 
 # Поле для ввода текста
-entry_text = tk.Entry (root, width=70)
+entry_text = tk.Text(root, width=70,  height=10)
 entry_text.pack(pady=10)
 
 # Кнопка вставки текста
