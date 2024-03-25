@@ -13,26 +13,43 @@
                 <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Загрузить</button></p>
             </form>
         </div>
-        <img id="img-app" src="{% static file_path_static %}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="Загрузите изображение">
+        <img id="img-app" src="data:image/jpeg;base64,{{ encoded_image }}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="Загрузите изображение">
+        {% if show_translate_image_button %}
+        <div>
+            <p><br/><button id="translateImageBtn" type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Перевести текст на изображении</button></p>
+        </div>
+        <script>
+            document.getElementById('translateImageBtn').addEventListener('click', function() {
+                var imgSrc = document.getElementById('img-app').src;
+                sendDataToServer(
+                    "translate_image", 
+                    { img_src: imgSrc },
+                    function(response) {
+                        document.getElementById('img-translated').src = "data:image/jpeg;base64," + response
+                    });
+            });
+        </script>
+        {% endif %}
     </div>
     <div class="col-4 text-center">Результат извлечения текста:
         <div>
-            <textarea style="letter-spacing: 0.5%; width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 3px;" class="form-control">{{ t }}</textarea>
+            <textarea style="letter-spacing: 0.5%; width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; border-radius: 3px;" class="form-control">{{ t }}</textarea>
         </div>
         <div class="form" style="margin-top: 90px;">
             <form method="POST" style="border-radius: 3px;">
                 {% csrf_token %}
-                <input type="hidden" name="form_type" value="change_language">
+                <input type="hidden" name="form_type" value="change_language"/>
                 {{ language_and_code }}
-                <input type="submit" value="Подтвердить выбор языка" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;">
+                <input type="submit" value="Подтвердить выбор языка" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;"/>
             </form>
         </div>
         <div style="margin-top: 90px;">Результат перевода текста:
-            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; resize: none; border-radius: 3px;" class="form-control">{{ result_translate }}</textarea>
+            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; border-radius: 3px;" class="form-control">{{ result_translate }}</textarea>
         </div>
     </div>
     <div class="col-4">
         <div>
+            <img id="img-translated" src="data:image/jpeg;base64,{{ translated_image }}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="">
             <ul>
                 <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: Aqua; margin-top: 100px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
             </ul>
