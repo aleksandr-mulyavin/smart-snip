@@ -1,7 +1,10 @@
+import os
 from django.shortcuts import render
 from .translate_text import t, iso_639_1_languages, get_to_text_translate
 from .forms import UploadFileForm, DictLanguage
 from .api import APIImageHandler
+
+UPLOADED_DIR = 'main/static/main/image/uploaded'
 
 
 def home(request):
@@ -12,7 +15,9 @@ def handle_uploaded_file(f):
     """
     Позволяет сохранить файл, который загрузил пользователь
     """
-    file_path = f"main/static/main/image/{f.name}"
+    if not os.path.exists(UPLOADED_DIR):
+        os.makedirs(UPLOADED_DIR)
+    file_path = f"{UPLOADED_DIR}/{f.name}"
     with open(file_path, "wb+") as destination:
         for chunk in f.chunks():
             destination.write(chunk)
