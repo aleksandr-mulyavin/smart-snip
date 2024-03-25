@@ -1,54 +1,67 @@
 # Импортируем библиотеки
-import tkinter as tk
-from tkinter import ttk
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QPushButton, QVBoxLayout, QComboBox
+from PyQt5.QtCore import Qt
 from googletrans import Translator
 
 #Функция для копирования текста
 def copy_text():
-    text = output_text.get('1.0', 'end-1c')
-    root.clipboard_clear()
-    root.clipboard_append(text)
+    text = output_text.toPlainText()
+    app.clipboard().setText(text)
 
 #Функция для вставки текста
 def paste_text():
-    text = root.clipboard_get()
-    entry_text.insert(tk.END, text)
+    text = app.clipboard().text()
+    entry_text.insertPlainText(text)
 
-# Функция для обработки нажатия кнопки
+# Функция для обработки нажатия кнопки "перевести"
 def translate_text():
     translator = Translator()
-    translated_text = translator.translate(entry_text.get("1.0", "end"), dest=selected_language.get()).text
-    output_text.delete(1.0, tk.END)
-    output_text.insert(tk.END, translated_text)
+    translated_text = translator.translate(entry_text.toPlainText(), dest=selected_language.currentText()).text
+    output_text.setPlainText(translated_text)
 
 # Создание основного окна
-root = tk.Tk()
-root.title("Выберите язык и введите/вставьте текст, который нужно перевести: ")
+app = QApplication(sys.argv)
+window = QWidget()
+window.setWindowTitle("Выберите язык и введите/вставьте текст, который нужно перевести: ")
+
+#вертикальное расположение элементов интерфейса
+layout = QVBoxLayout()
 
 # Поле для ввода текста
-entry_text = tk.Text(root, width=70,  height=10)
-entry_text.pack(pady=10)
+entry_text = QTextEdit()
+entry_text.setFixedHeight(200) # длинна поля
+entry_text.setFixedWidth(600)  # ширина поля
+layout.addWidget(entry_text)
 
 # Кнопка вставки текста
-btn_paste = tk.Button(root, text="Вставить текст для перевода", command=paste_text)
-btn_paste.pack()
+btn_paste = QPushButton("Вставить текст для перевода")
+btn_paste.clicked.connect(paste_text)
+layout.addWidget(btn_paste)
 
 # Выпадающий список с выбором языка
-languages = ["English", "French", "German", "Russian"]  # Список доступных языков
-selected_language = ttk.Combobox(root, values=languages)
-selected_language.pack(pady=5)
-selected_language.set("English")  # Устанавливаем язык по умолчанию - английский
+languages = ["English", "French", "German", "Russian"] # Список доступных языков
+selected_language = QComboBox()
+selected_language.addItems(languages)
+selected_language.setCurrentText("English") # Устанавливаем язык по умолчанию - английский
+layout.addWidget(selected_language, alignment=Qt.AlignCenter)  # выравнивание по центру
 
-# Кнопка для запуска перевода
-translate_button = tk.Button(root, text="Перевести", command=translate_text)
-translate_button.pack(pady=5)
+# Кнопка перевести
+translate_button = QPushButton("Перевести")
+translate_button.clicked.connect(translate_text)
+layout.addWidget(translate_button)
 
 # Поле для вывода переведенного текста
-output_text = tk.Text(root, height=10, width=70)
-output_text.pack(pady=10)
+output_text = QTextEdit()
+output_text.setFixedHeight(200) # длина поля
+output_text.setFixedWidth(600)  # ширина поля
+layout.addWidget(output_text)
 
 # Кнопка для копирования
-btn_copy = tk.Button(root, text="Копировать перевод", command=copy_text)
-btn_copy.pack()
+btn_copy = QPushButton("Копировать перевод")
+btn_copy.clicked.connect(copy_text)
+layout.addWidget(btn_copy)
 
-root.mainloop()
+window.setLayout(layout)
+window.show()
+sys.exit(app.exec_())
