@@ -159,7 +159,13 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 /.pylintrc
+
 /desktop_client/config.yaml
 /.venv_311/
 
 *.env
+
+# Django secret key
+web_client/web_client/secret.py
+
+uploaded/
