@@ -34,7 +34,9 @@ def app(request):
     result_translate = get_to_text_translate(s, 'ru')  # функция с переводом
     language_and_code = DictLanguage()  # форма с ниспадающим списком
     upload_file = UploadFileForm()
+    file_path = None
     file_path_static = None
+    translated_image = None
 
     if request.method == "POST":
         form_type = request.POST.get("form_type")
@@ -48,6 +50,13 @@ def app(request):
                 if file_path is not None:
                     image_handler = APIImageHandler(image_path=file_path)
                     s = image_handler.image_to_text()
+                    result_translate = get_to_text_translate(s, 'ru')
+
+        elif form_type == 'translate_image':
+            file_path = request.POST.get("file_path")
+            if file_path is not None:
+                image_handler = APIImageHandler(image_path=file_path)
+                translated_image = image_handler.translate_image()
 
         elif form_type == 'change_language':
             lang_elements = request.POST.get("lang_elements")
@@ -64,7 +73,9 @@ def app(request):
             "t": s,
             "iso_639_1_languages": iso_639_1_languages,
             "upload_file": upload_file,
-            "file_path_static": file_path_static
+            "file_path": file_path,
+            "file_path_static": file_path_static,
+            "translated_image": translated_image,
         }
     )
 
