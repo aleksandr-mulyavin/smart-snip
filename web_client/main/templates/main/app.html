@@ -14,14 +14,22 @@
             </form>
         </div>
         <img id="img-app" src="{% static file_path_static %}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="Загрузите изображение">
+        {% if show_translate_image_button %}
         <div>
-            <form method="POST" style="margin-top: 40px;">
-                {% csrf_token %}
-                <input type="hidden" name="form_type" value="translate_image"/>
-                <input type="hidden" name="file_path" value="{{ file_path }}"/>
-                <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Перевести текст на изображении</button></p>
-            </form>
+            <p><br/><button id="translateImageBtn" type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Перевести текст на изображении</button></p>
         </div>
+        <script>
+            document.getElementById('translateImageBtn').addEventListener('click', function() {
+                var imgSrc = document.getElementById('img-app').src;
+                sendDataToServer(
+                    "translate_image", 
+                    { img_src: imgSrc },
+                    function(response) {
+                        document.getElementById('img-translated').src = "data:image/jpeg;base64," + response
+                    });
+            });
+        </script>
+        {% endif %}
     </div>
     <div class="col-4 text-center">Результат извлечения текста:
         <div>
