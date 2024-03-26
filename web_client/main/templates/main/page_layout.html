@@ -13,7 +13,7 @@
 </head>
 <body style="background-image: url('https://pibig.info/uploads/posts/2022-11/1669679300_47-pibig-info-p-fon-cherno-fioletovii-oboi-48.jpg'); overflow-x: hidden;">
     <script>
-        function sendDataToServer(url, data, onSuccess) {
+        function sendDataToServer(url, data, onSuccess, onError, onComplete) {
             var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             $.ajax({
                 type: "POST",
@@ -22,7 +22,9 @@
                     'X-CSRFToken': csrftoken
                 },
                 data: data,
-                success: onSuccess
+                success: onSuccess,
+                error: onError,
+                complete: onComplete
             });
         }
     </script>

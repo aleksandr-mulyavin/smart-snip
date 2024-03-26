@@ -41,10 +41,14 @@
                 sendDataToServer(
                     "translate_image", 
                     { img_src: imgSrc },
-                    function(response) {
+                    (response) => {
                         document.getElementById('img-translated').src = "data:image/jpeg;base64," + response;
+                    },
+                    () => {},
+                    (response) => {
                         $('#loadingModal').hide();
-                    });
+                    }
+                );
                 $('#loadingModal').show();
             });
         </script>
