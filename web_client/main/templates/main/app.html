@@ -32,19 +32,15 @@
         {% endif %}
     </div>
     <div class="col-4 text-center">Результат извлечения текста:
-        <div>
-            <textarea style="letter-spacing: 0.5%; width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; border-radius: 3px;" class="form-control">{{ t }}</textarea>
-        </div>
-        <div class="form" style="margin-top: 90px;">
+        <div class="form" style="margin-top: 10px;">
             <form method="POST" style="border-radius: 3px;">
                 {% csrf_token %}
-                <input type="hidden" name="form_type" value="change_language"/>
-                {{ language_and_code }}
-                <input type="submit" value="Подтвердить выбор языка" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;"/>
+                <div style="margin-top: 30px;">
+                    <input type="hidden" name="form_type" value="change_language"/>
+                    {{ translator_form }}
+                    <input type="submit" value="Перевести текст" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;"/>
+                </div>
             </form>
-        </div>
-        <div style="margin-top: 90px;">Результат перевода текста:
-            <textarea style="width: 50%; max-width: 100%; margin: 0 auto; margin-top: 20px; padding-top: 0; min-width: 100px; border-radius: 3px;" class="form-control">{{ result_translate }}</textarea>
         </div>
     </div>
     <div class="col-4">

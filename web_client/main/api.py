@@ -39,7 +39,7 @@ class APIImageHandler():
             self.api_config.translate_image,
             TranslateImageTextRequest(
                 image=encoded_image,
-                to_lang=''
+                to_lang='ru'
             )
         )
         translated = TranslateImageTextResponse.model_validate(

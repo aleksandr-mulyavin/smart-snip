@@ -1,7 +1,7 @@
 import base64
 from django.shortcuts import render, HttpResponse
-from .translate_text import t, iso_639_1_languages, get_to_text_translate
-from .forms import UploadFileForm, DictLanguage
+from .translate_text import iso_639_1_languages, get_to_text_translate
+from .forms import UploadFileForm, TranslatorForm
 from .api import APIImageHandler
 
 
@@ -10,9 +10,12 @@ def home(request):
 
 
 def app(request):
-    s = t()  # временная функция с текстом
-    result_translate = get_to_text_translate(s, 'ru')  # функция с переводом
-    language_and_code = DictLanguage()  # форма с ниспадающим списком
+    source_text = 'Work'
+    translated_text = get_to_text_translate(source_text, 'ru')
+    translator_form = TranslatorForm(initial={
+        'source_text': source_text,
+        'translated_text': translated_text,
+    })
     upload_file = UploadFileForm()
     encoded_image = None
 
@@ -25,18 +28,22 @@ def app(request):
                 encoded_image = base64.b64encode(image_data).decode('utf-8')
 
         elif form_type == 'change_language':
-            lang_elements = request.POST.get("lang_elements")
-            output = lang_elements
-            # функция с переводом
-            result_translate = get_to_text_translate(s, output)
+            translator_form = TranslatorForm(request.POST)
+            if translator_form.is_valid():
+                source_text = translator_form.cleaned_data['source_text']
+                output = translator_form.cleaned_data['lang_elements']
+                # функция с переводом
+                translated_text = get_to_text_translate(source_text, output)
+                translator_form = TranslatorForm(initial={
+                    'source_text': source_text,
+                    'translated_text': translated_text,
+                })
 
     return render(
         request,
         'main/app.html',
         {
-            "language_and_code": language_and_code,
-            "result_translate": result_translate,
-            "t": s,
+            "translator_form": translator_form,
             "iso_639_1_languages": iso_639_1_languages,
             "upload_file": upload_file,
             "show_translate_image_button": encoded_image is not None,
