@@ -17,6 +17,7 @@ def app(request):
         'translated_text': translated_text,
     })
     upload_file = UploadFileForm()
+    image_filename = ''
     encoded_image = None
 
     if request.method == "POST":
@@ -24,6 +25,7 @@ def app(request):
         if form_type == 'upload_file':
             upload_file = UploadFileForm(request.POST, request.FILES)
             if upload_file.is_valid():
+                image_filename = upload_file.cleaned_data['file'].name
                 image_data = request.FILES['file'].read()
                 encoded_image = base64.b64encode(image_data).decode('utf-8')
                 image_handler = APIImageHandler(
@@ -58,6 +60,7 @@ def app(request):
             "show_translate_image_button": encoded_image is not None,
             "encoded_image": encoded_image,
             "show_encoded_image": encoded_image is not None,
+            'image_filename': image_filename,
         }
     )
 
