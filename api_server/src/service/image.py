@@ -1,3 +1,4 @@
+# import os
 import numpy as np
 from sklearn.cluster import KMeans
 from PIL import (
@@ -141,7 +142,7 @@ class ImageHandler():
 
     def __get_font(self, draw: ImageDraw, text: str, width: int) -> int:
         size = 14
-        font = ImageFont.load_default(size)
+        font = self.__get_default_font(size)
         for _ in range(100):
             lenght = draw.textlength(text, font)
             if 0 <= (width - lenght) < 10:
@@ -152,9 +153,13 @@ class ImageHandler():
                 size -= 1
             else:
                 size += 1
-            font = ImageFont.load_default(size)
+            font = self.__get_default_font(size)
 
         return font
+
+    @staticmethod
+    def __get_default_font(size: int):
+        return ImageFont.truetype('arial.ttf', size)
 
     @staticmethod
     def __erode(image, cycles, size=3):

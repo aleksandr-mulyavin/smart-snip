@@ -10,4 +10,5 @@ COPY src/domain domain
 RUN mkdir -p service
 COPY src/service service
 COPY src/*.py .
-RUN mkdir logs
+COPY arial.ttf /usr/share/fonts/truetype/.
+RUN mkdir /logs
