@@ -1,0 +1,44 @@
+version: '3'
+services:
+  smart-snip-api:
+    build:
+      context: ./api_server
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    image: smart-snip-api:latest
+    container_name: smart-snip-api
+    env_file:
+      - ./api_server/default.env
+    restart: always
+    command: python -m app.main
+    working_dir: /
+    networks:
+      - network-smart-snip
+    ports:
+      - "8088:8080"
+    volumes:
+      - logs:/logs
+
+  smart-snip-web:
+    build:
+      context: ./web_client
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    image: smart-snip-web:latest
+    container_name: smart-snip-web
+    env_file:
+      - ./web_client/default.env
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8089
+    working_dir: /app
+    networks:
+      - network-smart-snip
+    ports:
+      - "8089:8089"
+
+volumes:
+  logs: 
+networks:
+  network-smart-snip:

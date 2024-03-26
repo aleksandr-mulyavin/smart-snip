@@ -1,17 +1,14 @@
-from django.db import models
 from pydantic import BaseModel
-
-
-class APIConfig(BaseModel):
-    url: str
-    token: str
-    image_to_text: str
-    translate_image: str
+from .ocr import OCRData
 
 
 class ImageToTextRequest(BaseModel):
     image: str
     lang: str = ''
+
+
+class ImageToDataResponse(BaseModel):
+    image_data: list[OCRData]
 
 
 class TranslateImageTextRequest(BaseModel):
@@ -21,3 +18,7 @@ class TranslateImageTextRequest(BaseModel):
 
 class TranslateImageTextResponse(BaseModel):
     image: str
+
+
+class Error(BaseModel):
+    error: str

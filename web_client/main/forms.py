@@ -6,8 +6,20 @@ class UploadFileForm(forms.Form):
     file = forms.ImageField(label="")
 
 
-class DictLanguage(forms.Form):
+class TranslatorForm(forms.Form):
     """
     Создает форму для выбора из выпадающего списка названия языков
     """
-    lang_elements = forms.ChoiceField(choices=iso_639_1_languages, label='')
+    source_text = forms.CharField(
+        widget=forms.Textarea,
+        label='Исходный текст'
+    )
+    lang_elements = forms.ChoiceField(
+        choices=iso_639_1_languages,
+        label=''
+    )
+    translated_text = forms.CharField(
+        widget=forms.Textarea,
+        label='Перевод',
+        required=False,
+    )
