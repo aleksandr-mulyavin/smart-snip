@@ -3,6 +3,11 @@
 {% block title %}Приложение{% endblock %}
 
 {% block content %}
+<div id="loadingModal" class="modal">
+    <div class="modal-content">
+        <p>Выполняется обработка изображения...</p>
+    </div>
+</div>
 <div class="row" style="margin-top: 100px; color: white;">
     <div class="col-4 text-center">
         <div>
@@ -14,6 +19,18 @@
             </form>
         </div>
         <img id="img-app" src="data:image/jpeg;base64,{{ encoded_image }}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="Загрузите изображение">
+    </div>
+    <div class="col-4 text-center">
+        <div class="form" style="margin-top: 10px;">
+            <form method="POST" style="border-radius: 3px;">
+                {% csrf_token %}
+                <div style="margin-top: 30px;">
+                    <input type="hidden" name="form_type" value="translator_form"/>
+                    {{ translator_form }}
+                    <input type="submit" value="Перевести текст" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;"/>
+                </div>
+            </form>
+        </div>
         {% if show_translate_image_button %}
         <div>
             <p><br/><button id="translateImageBtn" type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Перевести текст на изображении</button></p>
@@ -25,23 +42,13 @@
                     "translate_image", 
                     { img_src: imgSrc },
                     function(response) {
-                        document.getElementById('img-translated').src = "data:image/jpeg;base64," + response
+                        document.getElementById('img-translated').src = "data:image/jpeg;base64," + response;
+                        $('#loadingModal').hide();
                     });
+                $('#loadingModal').show();
             });
         </script>
         {% endif %}
-    </div>
-    <div class="col-4 text-center">Результат извлечения текста:
-        <div class="form" style="margin-top: 10px;">
-            <form method="POST" style="border-radius: 3px;">
-                {% csrf_token %}
-                <div style="margin-top: 30px;">
-                    <input type="hidden" name="form_type" value="change_language"/>
-                    {{ translator_form }}
-                    <input type="submit" value="Перевести текст" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;"/>
-                </div>
-            </form>
-        </div>
     </div>
     <div class="col-4">
         <div>

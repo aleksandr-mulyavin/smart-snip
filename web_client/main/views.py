@@ -26,8 +26,17 @@ def app(request):
             if upload_file.is_valid():
                 image_data = request.FILES['file'].read()
                 encoded_image = base64.b64encode(image_data).decode('utf-8')
+                image_handler = APIImageHandler(
+                    encoded_image=encoded_image
+                )
+                source_text = image_handler.image_to_text()
+                translated_text = get_to_text_translate(source_text, 'ru')
+                translator_form = TranslatorForm(initial={
+                    'source_text': source_text,
+                    'translated_text': translated_text,
+                })
 
-        elif form_type == 'change_language':
+        elif form_type == 'translator_form':
             translator_form = TranslatorForm(request.POST)
             if translator_form.is_valid():
                 source_text = translator_form.cleaned_data['source_text']
