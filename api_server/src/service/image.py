@@ -76,41 +76,101 @@ class ImageHandler():
         """
         draw = ImageDraw.Draw(self.image)
 
+        # groups of words and coordinates
+        groups = []
+
+        block_num, par_num, line_num = 0, 0, 0
+        x1, y1, x2, y2 = -1, -1, -1, -1
+        word_list = []
         for row in data:
-            if row is not None and row.conf != -1:
+            if (row is not None
+                    and row.conf > 0
+                    and row.width > 10
+                    and row.height > 5
+                    and row.text.strip() != ''
+                    and any([s.isalpha() for s in row.text])):
 
-                if row.text.strip() != '':
-
-                    if (row.width > 10
-                            and row.height > 5
-                            and row.conf > 15
-                            and any([s.isalpha() for s in row.text])):
-
-                        text = self.translator.translate(row.text)
-                        logger.info(text)
-
-                        back_color, text_color = self._determine_colors((
-                            row.left,
-                            row.top,
-                            row.left + row.width,
-                            row.top + row.height
-                        ))
-
-                        self.__clear_block(back_color, (
-                            row.left,
-                            row.top,
-                            row.left + row.width,
-                            row.top + row.height
-                        ))
-
-                        font = self.__get_font(draw, text, row.width)
-
-                        draw.text(
-                            xy=(row.left, row.top),
-                            text=text,
-                            font=font,
-                            fill=tuple(text_color)
+                if (block_num == row.block_num
+                        and par_num == row.par_num
+                        and line_num == row.line_num):
+                    word_list.append(row.text)
+                    if x1 == -1:
+                        x1 = row.left
+                    if y1 == -1:
+                        y1 = row.top
+                    if x2 < row.left + row.width:
+                        x2 = row.left + row.width
+                    if y2 < row.top + row.height:
+                        y2 = row.top + row.height
+                else:
+                    if word_list:
+                        block = (x1, y1, x2, y2)
+                        _, text_color = self._determine_colors(
+                            block
                         )
+                        groups.append({
+                            'words': word_list,
+                            'block': block,
+                            'color': tuple(text_color)
+                        })
+                    block_num = row.block_num
+                    par_num = row.par_num
+                    line_num = row.line_num
+                    x1, y1 = row.left, row.top
+                    x2, y2 = row.left + row.width, row.top + row.height
+                    word_list = [row.text]
+        if word_list:
+            block = (x1, y1, x2, y2)
+            _, text_color = self._determine_colors(
+                block
+            )
+            groups.append({
+                'words': word_list,
+                'block': block,
+                'color': tuple(text_color)
+            })
+
+        # clear image from text
+        for row in data:
+            if (row is not None
+                    and row.conf > 0
+                    and row.width > 10
+                    and row.height > 5
+                    and row.text.strip() != ''
+                    and any([s.isalpha() for s in row.text])):
+
+                back_color, text_color = self._determine_colors((
+                    row.left,
+                    row.top,
+                    row.left + row.width,
+                    row.top + row.height
+                ))
+                self.__clear_block(back_color, (
+                    row.left,
+                    row.top,
+                    row.left + row.width,
+                    row.top + row.height
+                ))
+
+        # draw text
+        for group in groups:
+
+            text = ' '.join(group.get('words'))
+            translated_text = self.translator.translate(text)
+
+            block = group.get('block')
+
+            font = self.__get_font(
+                draw=draw,
+                text=translated_text,
+                width=block[2] - block[0]
+            )
+            draw.text(
+                xy=(block[0], block[1]),
+                text=translated_text,
+                font=font,
+                fill=group.get('color')
+            )
 
     def __clear_block(self, color, block):
         if block[0] > 0 and block[1] > 0:
