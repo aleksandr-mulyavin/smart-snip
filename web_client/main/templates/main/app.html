@@ -9,22 +9,31 @@
     </div>
 </div>
 <div class="row" style="margin-top: 100px; color: white;">
-    <div class="col-4 text-center">
+    <div class="col-4 text-center" style="width: 35%; height: auto;">
         <div>
-            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 40px;">
+            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 15px;">
                 {% csrf_token %}
                 <input type="hidden" name="form_type" value="upload_file">
                 {{ upload_file.as_p }}
                 <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Загрузить</button></p>
             </form>
         </div>
-        <img id="img-app" src="data:image/jpeg;base64,{{ encoded_image }}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="Загрузите изображение">
+        <!--<div>
+            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 40px;">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="upload_file">
+                {{ upload_file.as_p }}
+                <p><button type="submit" class="btn btn-info" style="background-color: #FF69B4; border-radius: 3px;">Загрузить</button></p>
+            </form>
+        </div>-->
+        <img id="img-app" src="data:image/jpeg;base64,{{ encoded_image }}" style="border-radius: 3px; margin-top: 50px; margin-left: 10px; width: 80%; height: auto;" class="img-fluid rounded" alt="Загрузите изображение">-
+        <!--<img id="i" class="img-fluid rounded" style="border-radius: 3px; margin-top: 50px; margin-left: 10px; width: 80%; height: auto;" src="{% static 'main/image/slide-0.jpg' %}" alt="Лог">-->
     </div>
-    <div class="col-4 text-center">
+    <div class="col-4 text-center" style="width: 30%; height: auto;">
         <div class="form" style="margin-top: 10px;">
             <form method="POST" style="border-radius: 3px;">
                 {% csrf_token %}
-                <div style="margin-top: 30px;">
+                <div style="margin-top: 90px; width: 70%; height: auto; margin-left: 80px;">
                     <input type="hidden" name="form_type" value="translator_form"/>
                     {{ translator_form }}
                     <input type="submit" value="Перевести текст" class="btn btn-info" style="margin-top: 30px; background-color: #00FA9A; border-radius: 3px;"/>
@@ -50,12 +59,16 @@
         </script>
         {% endif %}
     </div>
-    <div class="col-4">
+    <div class="col-4 text-center" style="width: 35%; height: auto;">
         <div>
-            <img id="img-translated" src="data:image/jpeg;base64,{{ translated_image }}" style="border-radius: 3px; margin-top: 30px; margin-left: 50 px;" class="img-fluid rounded" alt="">
             <ul>
-                <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: Aqua; margin-top: 100px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
+                <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: Aqua; margin-top: 45px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
             </ul>
+            <img id="img-translated" src="data:image/jpeg;base64,{{ translated_image }}" style="border-radius: 3px; margin-top: 75px; width: 80%; height: auto;" class="img-fluid rounded" alt="">
+            <!--<img id="q" class="img-fluid rounded" style="border-radius: 3px; margin-top: 75px; width: 80%; height: auto;" src="{% static 'main/image/slide-0.jpg' %}" alt="Лог">-->
+            <!--<ul>
+                <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: Aqua; margin-top: 100px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
+            </ul>-->
         </div>
     </div>
 </div>
