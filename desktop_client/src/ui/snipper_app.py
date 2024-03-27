@@ -77,7 +77,7 @@ class SnipperApp(QtWidgets.QApplication):
         # self._snipper.showFullScreen()
         # QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CrossCursor)
 
-    def _tranlsate(self):
+    def _translate(self):
         """
         Обработчик события - Перевести
         """
