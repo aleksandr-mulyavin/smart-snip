@@ -56,6 +56,8 @@ def app(request):
             image_filename = request.session.get('image_filename')
             translated_image = request.session.get('translated_image')
 
+    display_download_button = 'none' if translated_image is None else 'block'
+
     return render(
         request,
         'main/app.html',
@@ -68,6 +70,7 @@ def app(request):
             "show_encoded_image": encoded_image is not None,
             'image_filename': image_filename,
             'translated_image': translated_image,
+            "display_download_image_button": display_download_button,
         }
     )
 

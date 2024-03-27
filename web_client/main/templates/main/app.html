@@ -52,6 +52,7 @@
                     { img_src: imgSrc },
                     (response) => {
                         document.getElementById('img-translated').src = "data:image/jpeg;base64," + response;
+                        document.getElementById('download-image-button').style = "display: block;";
                     },
                     () => {},
                     (response) => {
@@ -65,7 +66,7 @@
     </div>
     <div class="col-4 text-center" style="width: 35%; height: auto;">
         <div>
-            <ul>
+            <ul id="download-image-button" style="display: {{ display_download_image_button }};">
                 <button class="btn btn-info" style="background-color: Aqua; margin-top: 45px;" onclick="downloadImage()"><i class="bi bi-filetype-exe"></i> Скачать файл </button>
             </ul>
             <img id="img-translated" src="data:image/jpeg;base64,{{ translated_image }}" style="border-radius: 3px; margin-top: 75px; width: 80%; height: auto;" class="img-fluid rounded" alt="">
