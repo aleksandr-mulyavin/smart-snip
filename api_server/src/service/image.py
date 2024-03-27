@@ -1,4 +1,4 @@
-# import os
+import textwrap
 import numpy as np
 from sklearn.cluster import KMeans
 from PIL import (
@@ -156,11 +156,22 @@ class ImageHandler():
             text = ' '.join(group.get('words'))
             translated_text = self.translator.translate(text)
 
+            max_width = max([len(line) for line in text.split('\n')])
+
+            wrapped_list = []
+            for line in translated_text.split('\n'):
+                for wrapped_line in textwrap.wrap(
+                            text=line,
+                            width=int(max_width * 1.5),
+                            break_long_words=False):
+                    wrapped_list.append(wrapped_line)
+            wrapped_text = '\n'.join(wrapped_list)
+
             block = group.get('block')
 
             font = self.__get_font(
                 draw=draw,
-                text=translated_text,
+                text=wrapped_text,
                 block=block
             )
             draw.multiline_text(
@@ -168,7 +179,7 @@ class ImageHandler():
                     (block[0] + block[2]) / 2,  # x
                     (block[1] + block[3]) / 2   # y
                 ),
-                text=translated_text,
+                text=wrapped_text,
                 font=font,
                 fill=group.get('color'),
                 anchor='mm',
