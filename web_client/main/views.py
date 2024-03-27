@@ -1,65 +1,76 @@
-import os
-from django.shortcuts import render
-from .translate_text import t, iso_639_1_languages, get_to_text_translate
-from .forms import UploadFileForm, DictLanguage
+import base64
+from django.shortcuts import render, HttpResponse
+from .translate_text import iso_639_1_languages, get_to_text_translate
+from .forms import UploadFileForm, TranslatorForm
 from .api import APIImageHandler
-
-UPLOADED_DIR = 'main/static/main/image/uploaded'
 
 
 def home(request):
     return render(request, 'main/home.html')
 
 
-def handle_uploaded_file(f):
-    """
-    Позволяет сохранить файл, который загрузил пользователь
-    """
-    if not os.path.exists(UPLOADED_DIR):
-        os.makedirs(UPLOADED_DIR)
-    file_path = f"{UPLOADED_DIR}/{f.name}"
-    with open(file_path, "wb+") as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-    if file_path:
-        # Получаем путь к файлу и путь к static,
-        # куда сохранился файл для отображения на веб-сайте
-        return file_path, file_path[12:]
-    else:
-        return None, None
-
-
 def app(request):
-    s = t()  # временная функция с текстом
-    result_translate = get_to_text_translate(s, 'ru')  # функция с переводом
-    language_and_code = DictLanguage()  # форма с ниспадающим списком
+    source_text = 'Work'
+    translated_text = get_to_text_translate(source_text, 'ru')
+    translator_form = TranslatorForm(initial={
+        'source_text': source_text,
+        'translated_text': translated_text,
+    })
     upload_file = UploadFileForm()
-    file_path_static = None
+    encoded_image = None
 
     if request.method == "POST":
         form_type = request.POST.get("form_type")
         if form_type == 'upload_file':
             upload_file = UploadFileForm(request.POST, request.FILES)
             if upload_file.is_valid():
-                # получение загруженного файла пользователем
-                file_path, file_path_static = handle_uploaded_file(
-                    upload_file.cleaned_data['file']
+                image_data = request.FILES['file'].read()
+                encoded_image = base64.b64encode(image_data).decode('utf-8')
+                image_handler = APIImageHandler(
+                    encoded_image=encoded_image
                 )
-                if file_path is not None:
-                    image_handler = APIImageHandler(image_path=file_path)
-                    s = image_handler.image_to_text()
+                source_text = image_handler.image_to_text()
+                translated_text = get_to_text_translate(source_text, 'ru')
+                translator_form = TranslatorForm(initial={
+                    'source_text': source_text,
+                    'translated_text': translated_text,
+                })
 
-        elif form_type == 'change_language':
-            lang_elements = request.POST.get("lang_elements")
-            output = lang_elements
-            result_translate = get_to_text_translate(s, output)  # функция с переводом
+        elif form_type == 'translator_form':
+            translator_form = TranslatorForm(request.POST)
+            if translator_form.is_valid():
+                source_text = translator_form.cleaned_data['source_text']
+                output = translator_form.cleaned_data['lang_elements']
+                # функция с переводом
+                translated_text = get_to_text_translate(source_text, output)
+                translator_form = TranslatorForm(initial={
+                    'source_text': source_text,
+                    'translated_text': translated_text,
+                })
 
-    return render(request, 'main/app.html', {"language_and_code": language_and_code,
-                                             "result_translate": result_translate,
-                                             "t": s,
-                                             "iso_639_1_languages": iso_639_1_languages,
-                                             "upload_file": upload_file,
-                                             "file_path_static": file_path_static})
+    return render(
+        request,
+        'main/app.html',
+        {
+            "translator_form": translator_form,
+            "iso_639_1_languages": iso_639_1_languages,
+            "upload_file": upload_file,
+            "show_translate_image_button": encoded_image is not None,
+            "encoded_image": encoded_image,
+            "show_encoded_image": encoded_image is not None,
+        }
+    )
+
+
+def translate_image(request):
+    img_src = request.POST.get("img_src")
+    translated_image = ''
+    if img_src is not None:
+        image_handler = APIImageHandler(
+            encoded_image=img_src.removeprefix('data:image/jpeg;base64,')
+        )
+        translated_image = image_handler.translate_image()
+    return HttpResponse(content=translated_image)
 
 
 def about(request):

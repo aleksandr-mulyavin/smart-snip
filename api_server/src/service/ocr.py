@@ -83,8 +83,8 @@ def image_to_data(
 
 def translate_image_text(
     image_base64: str,
-    from_lang: str = '',
-    to_lang: str = '',
+    from_lang: str = 'en',
+    to_lang: str = 'ru',
 ) -> str:
     result = ''
 
@@ -97,9 +97,10 @@ def translate_image_text(
 
     try:
 
+        lang = 'eng+rus' if from_lang == '' or from_lang == 'en' else from_lang
         str_data = pytesseract.image_to_data(
             image=image,
-            lang='eng+rus' if from_lang == '' else from_lang,
+            lang=lang,
         )
 
         data = [line for line in str_data.split('\n')]
@@ -107,7 +108,7 @@ def translate_image_text(
         image_data = [OCRData.from_str(line) for line in data[1:]]
 
         image_handler.translate_text(data=image_data)
-        image.save('result.png')
+        # image.save('result.png')
 
         buffered = BytesIO()
         image.save(buffered, format=image.format)
