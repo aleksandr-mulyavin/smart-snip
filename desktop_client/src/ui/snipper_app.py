@@ -68,11 +68,20 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu.addAction(self._img_menu_snip_view_action)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
+        self._tray_menu_modal_translate = QtWidgets.QAction("Перевести")
+        self._tray_menu_modal_translate.triggered.connect(self._translate)
+        self._tray_menu.addAction(self._tray_menu_modal_translate)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
         # self._snipper.showFullScreen()
         # QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CrossCursor)
+
+    def _tranlsate(self):
+        """
+        Обработчик события - Перевести
+        """
+        self.modal_translate()
 
     def _handle_snipping_finish(self):
         """
