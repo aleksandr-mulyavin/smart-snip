@@ -84,19 +84,20 @@ class ImageHandler():
         word_list = []
         for row in data:
             if (row is not None
-                    and row.conf > 0
-                    and row.width > 10
-                    and row.height > 5
-                    and row.text.strip() != ''
+                    and row.level == 5
                     and any([s.isalpha() for s in row.text])):
 
                 if (block_num == row.block_num
-                        and par_num == row.par_num
-                        and line_num == row.line_num):
+                        and par_num == row.par_num):
+
+                    if line_num != row.line_num:
+                        word_list.append('\n')
+                        line_num = row.line_num
+
                     word_list.append(row.text)
-                    if x1 == -1:
+                    if x1 == -1 or x1 > row.left:
                         x1 = row.left
-                    if y1 == -1:
+                    if y1 == -1 or y1 > row.top:
                         y1 = row.top
                     if x2 < row.left + row.width:
                         x2 = row.left + row.width
@@ -133,10 +134,7 @@ class ImageHandler():
         # clear image from text
         for row in data:
             if (row is not None
-                    and row.conf > 0
-                    and row.width > 10
-                    and row.height > 5
-                    and row.text.strip() != ''
+                    and row.level == 5
                     and any([s.isalpha() for s in row.text])):
 
                 back_color, text_color = self._determine_colors((
@@ -163,14 +161,20 @@ class ImageHandler():
             font = self.__get_font(
                 draw=draw,
                 text=translated_text,
-                width=block[2] - block[0]
+                block=block
             )
-            draw.text(
-                xy=(block[0], block[1]),
+            draw.multiline_text(
+                xy=(
+                    (block[0] + block[2]) / 2,  # x
+                    (block[1] + block[3]) / 2   # y
+                ),
                 text=translated_text,
                 font=font,
-                fill=group.get('color')
+                fill=group.get('color'),
+                anchor='mm',
+                align='center',
             )
+            # draw.rectangle(xy=block, outline=(255, 0, 0))
 
     def __clear_block(self, color, block):
         if block[0] > 0 and block[1] > 0:
@@ -200,17 +204,22 @@ class ImageHandler():
             cleaning_block,
             mask)
 
-    def __get_font(self, draw: ImageDraw, text: str, width: int) -> int:
+    def __get_font(self, draw: ImageDraw, text: str, block: tuple) -> int:
         size = 14
         font = self.__get_default_font(size)
         for _ in range(100):
-            lenght = draw.textlength(text, font)
-            if 0 <= (width - lenght) < 10:
-                break
-            if lenght > width:
-                if size < 5:
-                    break
+            box = draw.multiline_textbbox(
+                xy=(block[0], block[1]),
+                text=text,
+                font=font
+            )
+            if box[2] > block[2] or box[3] > block[3]:
                 size -= 1
+            elif ((0 <= (block[2] - box[2]) <= 10)
+                    or (0 <= (block[3] - box[3]) <= 10)):
+                # the box less then the block within 10 pixels
+                # stop search
+                break
             else:
                 size += 1
             font = self.__get_default_font(size)
