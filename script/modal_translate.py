@@ -4,64 +4,67 @@ from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QPushButton, QVBox
 from PyQt5.QtCore import Qt
 from googletrans import Translator
 
-#Функция для копирования текста
-def copy_text():
-    text = output_text.toPlainText()
-    app.clipboard().setText(text)
+class modal_translate(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-#Функция для вставки текста
-def paste_text():
-    text = app.clipboard().text()
-    entry_text.insertPlainText(text)
+    #Функция для копирования текста
+    def copy_text(self):
+        text = self.output_text.toPlainText()
+        QApplication.clipboard().setText(text)
 
-# Функция для обработки нажатия кнопки "перевести"
-def translate_text():
-    translator = Translator()
-    translated_text = translator.translate(entry_text.toPlainText(), dest=selected_language.currentText()).text
-    output_text.setPlainText(translated_text)
+    #Функция для вставки текста
+    def paste_text(self):
+        text = QApplication.clipboard().text()
+        self.entry_text.insertPlainText(text)
 
-# Создание основного окна
-app = QApplication(sys.argv)
-window = QWidget()
-window.setWindowTitle("Выберите язык и введите/вставьте текст, который нужно перевести: ")
+    # Функция для обработки нажатия кнопки "перевести"
+    def translate_text(self):
+        translator = Translator()
+        translated_text = translator.translate(self.entry_text.toPlainText(), dest=self.selected_language.currentText()).text
+        self.output_text.setPlainText(translated_text)
 
-#вертикальное расположение элементов интерфейса
-layout = QVBoxLayout()
+    # Создание основного окна
+    def initUI(self):
+        self.setWindowTitle("Выберите язык и введите/вставьте текст, который нужно перевести: ")
 
-# Поле для ввода текста
-entry_text = QTextEdit()
-entry_text.setFixedHeight(200) # длинна поля
-entry_text.setFixedWidth(600)  # ширина поля
-layout.addWidget(entry_text)
+        # вертикальное расположение элементов интерфейса
+        layout = QVBoxLayout()
 
-# Кнопка вставки текста
-btn_paste = QPushButton("Вставить текст для перевода")
-btn_paste.clicked.connect(paste_text)
-layout.addWidget(btn_paste)
+        # Поле для ввода текста
+        self.entry_text = QTextEdit()
+        self.entry_text.setFixedHeight(200) # длинна поля
+        self.entry_text.setFixedWidth(600)  # ширина поля
+        layout.addWidget(self.entry_text)
 
-# Выпадающий список с выбором языка
-languages = ["English", "French", "German", "Russian"] # Список доступных языков
-selected_language = QComboBox()
-selected_language.addItems(languages)
-selected_language.setCurrentText("English") # Устанавливаем язык по умолчанию - английский
-layout.addWidget(selected_language, alignment=Qt.AlignCenter)  # выравнивание по центру
+        # Кнопка вставки текста
+        self.btn_paste = QPushButton("Вставить текст для перевода")
+        self.btn_paste.clicked.connect(self.paste_text)
+        layout.addWidget(self.btn_paste)
 
-# Кнопка перевести
-translate_button = QPushButton("Перевести")
-translate_button.clicked.connect(translate_text)
-layout.addWidget(translate_button)
+        # Выпадающий список с выбором языка
+        languages = ["English", "French", "German", "Russian"] # Список доступных языков
+        self.selected_language = QComboBox()
+        self.selected_language.addItems(languages)
+        self.selected_language.setCurrentText("English") # Устанавливаем язык по умолчанию - английский
+        layout.addWidget(self.selected_language, alignment=Qt.AlignCenter)  # выравнивание по центру
 
-# Поле для вывода переведенного текста
-output_text = QTextEdit()
-output_text.setFixedHeight(200) # длина поля
-output_text.setFixedWidth(600)  # ширина поля
-layout.addWidget(output_text)
+        # Кнопка перевести
+        self.translate_button = QPushButton("Перевести")
+        self.translate_button.clicked.connect(self.translate_text)
+        layout.addWidget(self.translate_button)
 
-# Кнопка для копирования
-btn_copy = QPushButton("Копировать перевод")
-btn_copy.clicked.connect(copy_text)
-layout.addWidget(btn_copy)
+        # Поле для вывода переведенного текста
+        self.output_text = QTextEdit()
+        self.output_text.setFixedHeight(200) # длина поля
+        self.output_text.setFixedWidth(600)  # ширина поля
+        layout.addWidget(self.output_text)
 
-window.setLayout(layout)
-window.show()
-sys.exit(app.exec_())
+        # Кнопка для копирования
+        self.btn_copy = QPushButton("Копировать перевод")
+        self.btn_copy.clicked.connect(self.copy_text)
+        layout.addWidget(self.btn_copy)
+
+        self.setLayout(layout)
+        self.show()
