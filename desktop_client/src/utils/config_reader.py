@@ -1,7 +1,7 @@
-import os
 import yaml
 
 from pydantic import BaseModel
+from .resource import ResourceFinder
 
 
 class ServerConfig(BaseModel):
@@ -17,6 +17,7 @@ class Config(BaseModel):
     Объект файл конфигурации
     """
     server: ServerConfig
+    snip_hotkey: str
 
 
 class ConfigReader(object):
@@ -36,48 +37,42 @@ class ConfigReader(object):
         инстанции (часть шаблона - Одиночка)
         """
         if not isinstance(cls.__instance, cls):
-            cls.__instance = object.__new__(cls)
-            return cls.__instance
+            cls.__instance = super(ConfigReader, cls).__new__(cls)
+        elif cls.__init__.__name__ == '__init__':
+            cls.__init__ = lambda *args, **kwargs: None
         return cls.__instance
 
     def __init__(self):
         """
         Конструктор класса
         """
+        self._config = self.read_config_file()
+        if self._config is None \
+                or self._config.server.url is None \
+                or self._config.server.api_key is None \
+                or self._config.server.url == "" \
+                or self._config.server.api_key == "":
+            raise RuntimeError('Настройки не заданы')
 
-        # Получение параметров из окружения (если задано)
-        self.url: str = os.getenv(self.URL_ENV)
-        self.api_key: str = os.getenv(self.API_KEY_ENV)
-
-        # Если в окружении не задано, то чтение параметров из файла
-        if self.url is None or self.api_key is None:
-            config = self.read_config_file(os.getenv(self.CONFIG_PATH))
-            if config is None or config.server.url is None or config.server.api_key is None \
-                    or config.server.url == "" or config.server.api_key == "":
-                raise RuntimeError('Настройки не заданы')
-            self.url = config.server.url
-            self.api_key = config.server.api_key
+        self.url = self._config.server.url
+        self.api_key = self._config.server.api_key
+        self.snip_hotkey = self._config.snip_hotkey
+        if self.snip_hotkey is None or self.snip_hotkey == '':
+            self.snip_hotkey = 'Ctrl+Shift+A'
 
     @staticmethod
-    def read_config_file(config_path: str) -> Config | None:
+    def read_config_file() -> Config | None:
         """
         Чтение параметров из файла
-        :param config_path: Путь к файлу с параметрами (без имени файла)
         :return: Инстанция объекта файла конфигурации
         """
-        filename: str = ""
-        if config_path is not None and config_path != "":
-            filename = config_path + '\\config.yaml'
-        if config_path is None or config_path == "":
-            filename = f'{os.path.dirname(__file__)}\\..\\..\\config.yaml'
+        resource_finder = ResourceFinder()
+        file_path = resource_finder.find_resource_file('config.yaml')
+        filename: str = str(file_path.absolute())
 
-        config_file: dict
-        # try:
+        config_file: dict = {}
         with open(filename, 'r') as f:
             config_file = yaml.safe_load(f)
             print(config_file)
-        # except FileNotFoundError:
-        #     print(f'Файл {filename} не найден')
-        #     return None
 
         return Config(**config_file)

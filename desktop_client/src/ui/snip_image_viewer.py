@@ -126,6 +126,6 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
         font.setPixelSize(height)
         line_edit.setFont(font)
         # line_edit.setAlignment(QtCore.Qt.AlignCenter)
-        line_edit.setWindowFlags(QtCore.Qt.TextSelectableByMouse)
+        # line_edit.setWindowFlags(QtCore.Qt.TextSelectableByMouse)
         line_edit.setTextMargins(0, 0, 0, 0)
         self._scene.addWidget(line_edit)
