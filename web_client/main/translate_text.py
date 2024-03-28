@@ -4,6 +4,7 @@ from django import forms
 # Список языков в соответствии со стандартом ISO 639-1
 iso_639_1_languages = {
     'ru': 'Russian',
+    'en': 'English',
     'af': 'Afrikaans',
     'ak': 'Akan',
     'sq': 'Albanian',
@@ -30,7 +31,6 @@ iso_639_1_languages = {
     'dv': 'Divehi',
     'nl': 'Dutch, Flemish',
     'dz': 'Dzongkha',
-    'en': 'English',
     'eo': 'Esperanto',
     'et': 'Estonian',
     'ee': 'Ewe',
@@ -62,7 +62,6 @@ iso_639_1_languages = {
     'ks': 'Kashmiri',
     'kk': 'Kazakh',
     'km': 'Central Khmer',
-    'ki': 'Kikuyu, Gikuyu',
     'rw': 'Kinyarwanda',
     'ky': 'Kirghiz',
     'kg': 'Kongo',
@@ -101,7 +100,6 @@ iso_639_1_languages = {
     'sm': 'Samoan',
     'sg': 'Sango',
     'sr': 'Serbian',
-    'gd': 'Gaelic, Scottish Gaelic',
     'sn': 'Shona',
     'si': 'Sinhala, Sinhalese',
     'sk': 'Slovak',
@@ -143,9 +141,15 @@ iso_639_1_languages = {
 }
 
 
-def get_to_text_translate(func, lang_code, from_="autodetect"):
-    """Позфоляет перевести текст. На вход подается текст и код языка, на который нужно перевести.
+def get_to_text_translate(text, lang_code, from_='autodetect'):
+    """Позволяет перевести текст.
+    На вход подается текст и код языка, на который нужно перевести.
     """
-    translator = Translator(to_lang=lang_code, from_lang=from_)  # "autodetect" # вот сюда добавить выбранный язык
-    text_to_translate = translator.translate(func)
-    return text_to_translate
+    if lang_code == from_:
+        return text
+    translator = Translator(to_lang=lang_code, from_lang=from_)
+    translated_text = translator.translate(text)
+    if (from_ == 'autodetect'
+            and translated_text == 'PLEASE SELECT TWO DISTINCT LANGUAGES'):
+        return text
+    return translated_text
