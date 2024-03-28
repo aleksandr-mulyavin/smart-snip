@@ -89,8 +89,9 @@ async def translate_image_text(
     """
     result = TranslateImageTextResponse(
         image=ocr.translate_image_text(
-                    request.image,
-                    request.to_lang)
+            request.image,
+            to_lang=request.to_lang
+        )
     )
 
     return JSONResponse(
