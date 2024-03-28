@@ -4,8 +4,8 @@ import base64
 from io import BytesIO
 from PIL.Image import Image
 
-from ..api_models import Error, ImageToTextRequest
-from ..api_models import ImageToDataResponse
+from api_models import Error, ImageToTextRequest
+from api_models import ImageToDataResponse
 
 API_METHOD_TO_TEXT = 'image_to_text'
 API_METHOD_TO_DATA = 'image_to_data'

@@ -4,8 +4,11 @@ from typing import List
 from PyQt5 import QtGui, QtWidgets
 
 from .snip_view_window import SnipViewWindow
-from ..controller import SnipperController
-from ..utils import QtKeyBinder
+from controller.snipper_controller import SnipperController
+from utils.sys_event_key import QtKeyBinder
+from utils.resource import ResourceFinder
+# from utils.image_viewer import conv_to_pixmap
+# from utils.api_caller import call_image_to_text
 
 LOGGER = logging.getLogger(__name__)
 SNIP_HOTKEY = "Ctrl+Shift+A"

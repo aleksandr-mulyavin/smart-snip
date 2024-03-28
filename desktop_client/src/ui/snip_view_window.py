@@ -3,7 +3,8 @@ import logging
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PIL.Image import Image
 
-from ..controller import SnipperController
+from controller.snipper_controller import SnipperController
+from utils.resource import ResourceFinder
 from .snip_image_viewer import SnipImageViewer
 from ..api_models import OCRData
 
