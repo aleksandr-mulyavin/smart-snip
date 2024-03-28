@@ -11,16 +11,22 @@
         link.download = "{{ image_filename }}";
         link.click();
     }
+    function showIndicator(text = "") {
+        const p = document.getElementById('indicator-text');
+        p.textContent = text;
+        $('#loading-indicator').show();
+    }
 </script>
-<div id="loadingModal" class="modal">
+<div id="loading-indicator" class="modal">
     <div class="modal-content">
-        <p>Выполняется обработка изображения...</p>
+        <div class="spinner"></div>
+        <p id="indicator-text">Выполняется обработка изображения...</p>
     </div>
 </div>
 <div class="row" style="margin-top: 100px; color: white;">
     <div class="col-4 text-center" style="width: 35%; height: auto;">
         <div>
-            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 15px;">
+            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 15px;" onsubmit="showIndicator('Загружается изображение...');">
                 {% csrf_token %}
                 <input type="hidden" name="form_type" value="upload_file">
                 {{ upload_file.as_p }}
@@ -56,10 +62,10 @@
                     },
                     () => {},
                     (response) => {
-                        $('#loadingModal').hide();
+                        $('#loading-indicator').hide();
                     }
                 );
-                $('#loadingModal').show();
+                showIndicator("Выполняется обработка изображения...");
             });
         </script>
         {% endif %}
