@@ -45,7 +45,8 @@ class ImageHandler():
 
         colors = sorted(
             [(percent, color) for (percent, color) in zip(hist, centroids)],
-            reverse=True
+            reverse=True,
+            key=lambda x: x[0]
         )
 
         if len(colors) > 1:
