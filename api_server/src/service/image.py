@@ -69,7 +69,7 @@ class ImageHandler():
             np.array(text_color, dtype=np.uint8)
         )
 
-    def translate_text(self, data: list[OCRData]) -> None:
+    def translate_text(self, data: list[OCRData], align='left') -> None:
         """Erases text from the image.
 
         Args:
@@ -85,8 +85,7 @@ class ImageHandler():
         word_list = []
         for row in data:
             if (row is not None
-                    and row.level == 5
-                    and any([s.isalpha() for s in row.text])):
+                    and row.level == 5):
 
                 if (block_num == row.block_num
                         and par_num == row.par_num):
@@ -175,17 +174,27 @@ class ImageHandler():
                 text=wrapped_text,
                 block=block
             )
-            draw.multiline_text(
-                xy=(
+
+            if align == 'center':
+                xy = (
                     (block[0] + block[2]) / 2,  # x
                     (block[1] + block[3]) / 2   # y
-                ),
+                )
+                anchor = 'mm'
+            else:
+                xy = block
+                anchor = 'la'
+
+            draw.multiline_text(
+                xy=xy,
                 text=wrapped_text,
                 font=font,
                 fill=group.get('color'),
-                anchor='mm',
-                align='center',
+                anchor=anchor,
+                align=align,
             )
+
+            # for debuging
             # draw.rectangle(xy=block, outline=(255, 0, 0))
 
     def __clear_block(self, color, block):
