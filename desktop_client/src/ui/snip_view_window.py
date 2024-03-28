@@ -1,12 +1,12 @@
 import logging
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PIL.Image import Image
 
 from controller.snipper_controller import SnipperController
 from utils.resource import ResourceFinder
 from .snip_image_viewer import SnipImageViewer
-from ..api_models import OCRData
+from api_models import OCRData
+from utils.image_viewer import conv_to_pixmap
 
 MAX_WIDTH: int = 800
 MAX_HEIGHT: int = 600
@@ -26,7 +26,7 @@ class SnipViewWindow(QtWidgets.QMainWindow):
         # Конвертация изображения в QPixmap для Qt
         self._pixmap = QtGui.QPixmap()
         if self._controller.is_image_selected():
-            self._pixmap = self.__conv_to_pixmap(
+            self._pixmap = conv_to_pixmap(
                 self._controller.get_selected_image())
 
         # Конфигурация окна виджета
@@ -131,25 +131,6 @@ class SnipViewWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(e)
 
-    def __on_lasso(self):
-        pass
-
-    @staticmethod
-    def __conv_to_pixmap(image: Image) -> QtGui.QPixmap:
-        try:
-            image_local = image.convert("RGBA")
-            image_data = image_local.tobytes("raw", "RGBA")
-            q_image = QtGui.QImage(image_data,
-                                   image_local.size[0],
-                                   image_local.size[1],
-                                   QtGui.QImage.Format_ARGB32)
-            print(image.size[0], image.size[1])
-            print(image_local.size[0], image_local.size[1])
-            return QtGui.QPixmap.fromImage(q_image)
-        except Exception as e:
-            logging.exception(e)
-            return QtGui.QPixmap()
-
     @staticmethod
     def __text_to_browser_processing(text: str) -> str:
         local_text = text.replace("\\n", "<br>")
@@ -165,7 +146,7 @@ class SnipViewWindow(QtWidgets.QMainWindow):
             # Конвертация изображения в QPixmap для Qt
             self._pixmap = QtGui.QPixmap()
             if self._controller.is_image_selected():
-                self._pixmap = self.__conv_to_pixmap(
+                self._pixmap = conv_to_pixmap(
                     self._controller.get_selected_image())
             self._image_viewer.set_photo(self._pixmap)
             self.show()
