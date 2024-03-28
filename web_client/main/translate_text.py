@@ -1,3 +1,4 @@
+import os
 from translate import Translator
 from django import forms
 
@@ -147,7 +148,21 @@ def get_to_text_translate(text, lang_code, from_='autodetect'):
     """
     if lang_code == from_:
         return text
-    translator = Translator(to_lang=lang_code, from_lang=from_)
+
+    provider = os.getenv('TRANSLATE_PROVIDER')
+    if provider is None:
+        provider = 'mymemory'
+    secret_key = os.getenv('TRANSLATE_KEY')
+    base_url = os.getenv('TRANSLATE_BASE_URL')
+
+    translator = Translator(
+        to_lang=lang_code,
+        from_lang=from_,
+        provider=provider,
+        secret_access_key=secret_key,
+        base_url=base_url,
+    )
+
     translated_text = translator.translate(text)
     if (from_ == 'autodetect'
             and translated_text == 'PLEASE SELECT TWO DISTINCT LANGUAGES'):
