@@ -159,7 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 /.pylintrc
-/desktop_client/config.yaml
+/desktop_client/src/config.yaml
 /.venv_311/
 
 *.env
