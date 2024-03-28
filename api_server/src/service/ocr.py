@@ -1,3 +1,4 @@
+import sys
 from PIL import (
     Image,
     UnidentifiedImageError
@@ -32,17 +33,33 @@ def image_to_string(
         str: text from image
     """
     result = ''
+
     try:
+
         image = image_from_base64(image_base64)
         result = pytesseract.image_to_string(
             image=image,
             lang='eng+rus' if lang == '' else lang,
             timeout=5,
         )
+
     except UnidentifiedImageError as image_error:
         logger.error(str(image_error))
+
     except RuntimeError as timeout_error:
         logger.error(str(timeout_error))
+
+    except Exception:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback_details = {
+            'filename': exc_traceback.tb_frame.f_code.co_filename,
+            'lineno': exc_traceback.tb_lineno,
+            'name': exc_traceback.tb_frame.f_code.co_name,
+            'type': exc_type.__name__,
+            'message': str(exc_value)
+        }
+        logger.error(traceback_details)
+
     return result
 
 
@@ -77,6 +94,16 @@ def image_to_data(
 
     except Exception as e:
         logger.error(str(e))
+
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback_details = {
+            'filename': exc_traceback.tb_frame.f_code.co_filename,
+            'lineno': exc_traceback.tb_lineno,
+            'name': exc_traceback.tb_frame.f_code.co_name,
+            'type': exc_type.__name__,
+            'message': str(exc_value)
+        }
+        logger.error(traceback_details)
 
     return result
 
@@ -117,6 +144,16 @@ def translate_image_text(
 
     except Exception as e:
         logger.error(str(e))
+
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback_details = {
+            'filename': exc_traceback.tb_frame.f_code.co_filename,
+            'lineno': exc_traceback.tb_lineno,
+            'name': exc_traceback.tb_frame.f_code.co_name,
+            'type': exc_type.__name__,
+            'message': str(exc_value)
+        }
+        logger.error(traceback_details)
 
     return result
 
