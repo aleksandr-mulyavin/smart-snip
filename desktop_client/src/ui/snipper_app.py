@@ -4,14 +4,15 @@ from typing import List
 
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication
-
 from utils.config_reader import ConfigReader
 from .snip_view_window import SnipViewWindow
+from .modal_translate import translatess
 from controller.snipper_controller import SnipperController
 from utils.sys_event_key import QtKeyBinder
 from utils.resource import ResourceFinder
-# from utils.image_viewer import conv_to_pixmap
-# from utils.api_caller import call_image_to_text
+from utils.image_viewer import conv_to_pixmap
+from utils.api_caller import call_image_to_text
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -63,6 +64,9 @@ class SnipperApp(QtWidgets.QApplication):
         self._tray_menu_snip_action = QtWidgets.QAction("Выделить область")
         self._tray_menu_snip_action.triggered.connect(self._handle_activate_snipping)
         self._tray_menu.addAction(self._tray_menu_snip_action)
+        self._tray_menu_translatess = QtWidgets.QAction("Переводчик")
+        self._tray_menu_translatess.triggered.connect(self._translate)
+        self._tray_menu.addAction(self._tray_menu_translatess)
         self._tray_menu_quit_action = QtWidgets.QAction("Выход")
         self._tray_menu_quit_action.triggered.connect(self.quit)
         self._tray_menu.addAction(self._tray_menu_quit_action)
@@ -76,11 +80,14 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu_snip_view_action = QtWidgets.QAction("Открыть выделенную область")
         self._img_menu_snip_view_action.triggered.connect(self._handle_snip_view)
         self._img_menu.addAction(self._img_menu_snip_view_action)
+        self._img_menu_recognize_and_copy = QtWidgets.QAction("Распознать и скопировать в буфер")
+        self._img_menu_recognize_and_copy.triggered.connect(self._handle_recognize_and_copy)
+        self._img_menu.addAction(self._img_menu_recognize_and_copy)
+        self._img_menu_snip_and_copy = QtWidgets.QAction("Скопировать в буфер")
+        self._img_menu_snip_and_copy.triggered.connect(self._handle_snip_and_copy)
+        self._img_menu.addAction(self._img_menu_snip_and_copy)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
-        self._tray_menu_modal_translate = QtWidgets.QAction("Перевести")
-        self._tray_menu_modal_translate.triggered.connect(self._translate)
-        self._tray_menu.addAction(self._tray_menu_modal_translate)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
@@ -91,7 +98,9 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Обработчик события - Перевести
         """
-        self.modal_translate()
+        self.new_window = translatess()
+        self.new_window.show()
+        
 
     def _handle_snipping_finish(self):
         """
@@ -118,3 +127,22 @@ class SnipperApp(QtWidgets.QApplication):
         """
         self._snip_viewer = SnipViewWindow(self._snipper_controller)
         self._snip_viewer.show()
+
+    def _handle_recognize_and_copy(self):
+        if not self._snipper_controller.is_image_selected():
+            return
+        text = call_image_to_text(
+            url=self._config_reader.url,
+            token=self._config_reader.api_key,
+            image=self._snipper_controller.get_selected_image())
+        if text is not None:
+            clipboard = QApplication.clipboard()
+            clipboard.setText(text)
+
+    def _handle_snip_and_copy(self):
+        if not self._snipper_controller.is_image_selected():
+            return
+        clipboard = QApplication.clipboard()
+        clipboard.setPixmap(
+            conv_to_pixmap(
+                self._snipper_controller.get_selected_image()))
