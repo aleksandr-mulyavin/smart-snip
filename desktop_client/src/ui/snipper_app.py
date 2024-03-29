@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication
 
 from utils.config_reader import ConfigReader
 from .snip_view_window import SnipViewWindow
+from .modal_translate import modal_translatess
 from controller.snipper_controller import SnipperController
 from utils.sys_event_key import QtKeyBinder
 from utils.resource import ResourceFinder
@@ -86,9 +87,9 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu.addAction(self._img_menu_snip_and_copy)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
-        self._tray_menu_modal_translate = QtWidgets.QAction("Перевести")
-        self._tray_menu_modal_translate.triggered.connect(self._translate)
-        self._tray_menu.addAction(self._tray_menu_modal_translate)
+        self._tray_menu_modal_translatess = QtWidgets.QAction("Перевести")
+        self._tray_menu_modal_translatess.triggered.connect(self._translate)
+        self._tray_menu.addAction(self._tray_menu_modal_translatess)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
@@ -99,7 +100,7 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Обработчик события - Перевести
         """
-        self.modal_translate()
+        self.modal_translatess()
 
     def _handle_snipping_finish(self):
         """

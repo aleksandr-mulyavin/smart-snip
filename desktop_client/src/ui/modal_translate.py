@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QPushButton, QVBox
 from PyQt5.QtCore import Qt
 from googletrans import Translator
 
-class modal_translate(QWidget):
+class modal_translatess(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
