@@ -1,2 +1,3 @@
 -r api_server/requirements.txt
 -r desktop_client/requirements.txt
+-r web_client/requirements.txt
