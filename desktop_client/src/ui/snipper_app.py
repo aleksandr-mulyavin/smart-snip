@@ -81,6 +81,9 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu_recognize_and_copy = QtWidgets.QAction("Распознать и скопировать в буфер")
         self._img_menu_recognize_and_copy.triggered.connect(self._handle_recognize_and_copy)
         self._img_menu.addAction(self._img_menu_recognize_and_copy)
+        self._img_menu_snip_and_copy = QtWidgets.QAction("Скопировать в буфер")
+        self._img_menu_snip_and_copy.triggered.connect(self._handle_snip_and_copy)
+        self._img_menu.addAction(self._img_menu_snip_and_copy)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
         self._tray_menu_modal_translate = QtWidgets.QAction("Перевести")
@@ -134,3 +137,11 @@ class SnipperApp(QtWidgets.QApplication):
         if text is not None:
             clipboard = QApplication.clipboard()
             clipboard.setText(text)
+
+    def _handle_snip_and_copy(self):
+        if not self._snipper_controller.is_image_selected():
+            return
+        clipboard = QApplication.clipboard()
+        clipboard.setPixmap(
+            conv_to_pixmap(
+                self._snipper_controller.get_selected_image()))
