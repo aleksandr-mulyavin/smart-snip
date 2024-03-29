@@ -10,8 +10,9 @@ from .snip_view_window import SnipViewWindow
 from controller.snipper_controller import SnipperController
 from utils.sys_event_key import QtKeyBinder
 from utils.resource import ResourceFinder
-# from utils.image_viewer import conv_to_pixmap
-# from utils.api_caller import call_image_to_text
+from utils.image_viewer import conv_to_pixmap
+from utils.api_caller import call_image_to_text
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -68,6 +69,7 @@ class SnipperApp(QtWidgets.QApplication):
         self._tray_menu.addAction(self._tray_menu_quit_action)
         self._tray.setContextMenu(self._tray_menu)
 
+
         # Настройка контекстного меню выделенного изображения
         self._img_menu = QtWidgets.QMenu()
         self._img_menu_stand_view_action = QtWidgets.QAction("Показать в просмотрщике")
@@ -76,6 +78,9 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu_snip_view_action = QtWidgets.QAction("Открыть выделенную область")
         self._img_menu_snip_view_action.triggered.connect(self._handle_snip_view)
         self._img_menu.addAction(self._img_menu_snip_view_action)
+        self._img_menu_recognize_and_copy = QtWidgets.QAction("Распознать и скопировать в буфер")
+        self._img_menu_recognize_and_copy.triggered.connect(self._handle_recognize_and_copy)
+        self._img_menu.addAction(self._img_menu_recognize_and_copy)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
         self._tray_menu_modal_translate = QtWidgets.QAction("Перевести")
@@ -118,3 +123,14 @@ class SnipperApp(QtWidgets.QApplication):
         """
         self._snip_viewer = SnipViewWindow(self._snipper_controller)
         self._snip_viewer.show()
+
+    def _handle_recognize_and_copy(self):
+        if not self._snipper_controller.is_image_selected():
+            return
+        text = call_image_to_text(
+            url=self._config_reader.url,
+            token=self._config_reader.api_key,
+            image=self._snipper_controller.get_selected_image())
+        if text is not None:
+            clipboard = QApplication.clipboard()
+            clipboard.setText(text)
