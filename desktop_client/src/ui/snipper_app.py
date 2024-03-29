@@ -100,8 +100,11 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Обработчик события - Перевести
         """
-        self.new_window = translatess()
-        self.new_window.show()
+        try:
+            self.new_window = translatess()
+            self.new_window.show()
+        except Exception as e:
+            LOGGER.exception(e)
         
 
     def _handle_snipping_finish(self):
