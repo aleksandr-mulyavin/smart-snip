@@ -64,6 +64,9 @@ class SnipperApp(QtWidgets.QApplication):
         self._tray_menu_snip_action = QtWidgets.QAction("Выделить область")
         self._tray_menu_snip_action.triggered.connect(self._handle_activate_snipping)
         self._tray_menu.addAction(self._tray_menu_snip_action)
+        self._tray_menu_translatess = QtWidgets.QAction("Переводчик")
+        self._tray_menu_translatess.triggered.connect(self._translate)
+        self._tray_menu.addAction(self._tray_menu_translatess)
         self._tray_menu_quit_action = QtWidgets.QAction("Выход")
         self._tray_menu_quit_action.triggered.connect(self.quit)
         self._tray_menu.addAction(self._tray_menu_quit_action)
@@ -85,9 +88,6 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu.addAction(self._img_menu_snip_and_copy)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
-        self._tray_menu_translatess = QtWidgets.QAction("Перевести")
-        self._tray_menu_translatess.triggered.connect(self._translate)
-        self._tray_menu.addAction(self._tray_menu_translatess)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
