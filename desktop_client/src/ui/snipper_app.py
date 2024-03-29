@@ -100,11 +100,8 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Обработчик события - Перевести
         """
-        try:
-            self.new_window = translatess()
-            self.new_window.show()
-        except Exception as e:
-            LOGGER.exception(e)
+        self.new_window = translatess()
+        self.new_window.show()
         
 
     def _handle_snipping_finish(self):
@@ -130,8 +127,6 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Обработчик события - Открыть выделенную область
         """
-        if not self._snipper_controller.is_image_selected():
-            return
         self._snip_viewer = SnipViewWindow(self._snipper_controller)
         self._snip_viewer.show()
 
