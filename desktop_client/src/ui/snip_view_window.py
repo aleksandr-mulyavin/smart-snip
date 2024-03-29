@@ -196,7 +196,7 @@ class SnipViewWindow(QtWidgets.QMainWindow):
             snipped_path = documents_path.joinpath("Snipped Image")
             if not snipped_path.exists():
                 snipped_path.mkdir(parents=True, exist_ok=True)
-            image_path = snipped_path.joinpath(f"snip_{datetime.now().strftime("%d_%m_%Y_%H_%M_%S")}.png")
+            image_path = snipped_path.joinpath(f"snip_{datetime.now().strftime('%d_%m_%Y_%H_%M_%S')}.png")
             file = QtCore.QFile(str(image_path))
             file.open(QtCore.QFile.WriteOnly)
             self._image_viewer.get_photo().save(file, 'PNG')
