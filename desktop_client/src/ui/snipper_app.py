@@ -4,10 +4,9 @@ from typing import List
 
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication
-
 from utils.config_reader import ConfigReader
 from .snip_view_window import SnipViewWindow
-from .modal_translate import modal_translatess
+from .modal_translate import translatess
 from controller.snipper_controller import SnipperController
 from utils.sys_event_key import QtKeyBinder
 from utils.resource import ResourceFinder
@@ -70,7 +69,6 @@ class SnipperApp(QtWidgets.QApplication):
         self._tray_menu.addAction(self._tray_menu_quit_action)
         self._tray.setContextMenu(self._tray_menu)
 
-
         # Настройка контекстного меню выделенного изображения
         self._img_menu = QtWidgets.QMenu()
         self._img_menu_stand_view_action = QtWidgets.QAction("Показать в просмотрщике")
@@ -87,9 +85,9 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu.addAction(self._img_menu_snip_and_copy)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
-        self._tray_menu_modal_translatess = QtWidgets.QAction("Перевести")
-        self._tray_menu_modal_translatess.triggered.connect(self._translate)
-        self._tray_menu.addAction(self._tray_menu_modal_translatess)
+        self._tray_menu_translatess = QtWidgets.QAction("Перевести")
+        self._tray_menu_translatess.triggered.connect(self._translate)
+        self._tray_menu.addAction(self._tray_menu_translatess)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
@@ -100,7 +98,9 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Обработчик события - Перевести
         """
-        self.modal_translatess()
+        self.new_window = translatess()
+        self.new_window.show()
+        
 
     def _handle_snipping_finish(self):
         """
