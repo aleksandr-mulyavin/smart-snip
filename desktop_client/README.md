@@ -7,6 +7,7 @@
 
 Для запуска приложения Вам необходимо:
 1) Создать файл config.yaml по адресу smart-snip\desktop_clint\src\utils
+
 Пример файла конфигурации config.yaml
 ```
 server:
