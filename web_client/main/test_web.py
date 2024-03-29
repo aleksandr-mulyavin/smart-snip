@@ -1,6 +1,3 @@
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import RequestFactory
-from django.urls import reverse
 from .translate_text import get_to_text_translate
 
 
