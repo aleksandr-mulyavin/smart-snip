@@ -6,9 +6,9 @@
 Установка необходимых пакетов осуществляется командой в терминале "pip install -r requirements.txt".
 
 Для запуска приложения Вам необходимо:
-1) Создать файл config.yaml по адресу smart-snip\desktop_clint\src\utils
+1) Создать файл "config.yaml" по адресу "smart-snip\desktop_clint\src\utils"
 
-Пример файла конфигурации config.yaml
+Пример файла конфигурации "config.yaml"
 ```
 server:
   url: 'https://smart-snip-api.cite.local/'
