@@ -68,8 +68,3 @@ class translatess(QWidget):
 
         self.setLayout(layout)
         self.show()
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = translatess()
-    sys.exit(app.exec_())
