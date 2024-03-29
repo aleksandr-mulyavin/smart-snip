@@ -130,6 +130,8 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Обработчик события - Открыть выделенную область
         """
+        if not self._snipper_controller.is_image_selected():
+            return
         self._snip_viewer = SnipViewWindow(self._snipper_controller)
         self._snip_viewer.show()
 

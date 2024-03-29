@@ -39,9 +39,13 @@ class SnipperController(QtCore.QObject):
         self.on_snipping_start.emit()
 
     def open_stand_image_viewer(self):
+        if not self.is_image_selected():
+            return
         open_stand_image_viewer(self.get_selected_image(), True)
 
     def parse_image_to_text(self) -> str:
+        if not self.is_image_selected():
+            return ''
         text: str = call_image_to_text(
             self._config_reader.url,
             self._config_reader.api_key,
@@ -49,6 +53,8 @@ class SnipperController(QtCore.QObject):
         return text
 
     def parse_image_to_data(self) -> list[OCRData]:
+        if not self.is_image_selected():
+            return ''
         self._ocr_data: list[OCRData] = call_image_to_data(
             self._config_reader.url,
             self._config_reader.api_key,
