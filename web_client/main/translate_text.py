@@ -1,6 +1,5 @@
 import os
 from translate import Translator
-from django import forms
 
 # Список языков в соответствии со стандартом ISO 639-1
 iso_639_1_languages = {
