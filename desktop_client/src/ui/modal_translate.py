@@ -1,8 +1,11 @@
 # Импортируем библиотеки
+import logging
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QPushButton, QVBoxLayout, QComboBox
 from PyQt5.QtCore import Qt
 from googletrans import Translator
+
+LOGGER = logging.getLogger(__name__)
 
 class translatess(QWidget):
     def __init__(self):
@@ -21,9 +24,14 @@ class translatess(QWidget):
 
     # Функция для обработки нажатия кнопки "перевести"
     def translate_text(self):
-        translator = Translator()
-        translated_text = translator.translate(self.entry_text.toPlainText(), dest=self.selected_language.currentText()).text
-        self.output_text.setPlainText(translated_text)
+        try:
+            translator = Translator()
+            translated_text = translator.translate(self.entry_text.toPlainText(),
+                                                   dest=self.selected_language.currentText()
+                                                   ).text
+            self.output_text.setPlainText(translated_text)
+        except Exception as e:
+            LOGGER.exception(e)
 
     # Создание основного окна
     def initUI(self):
