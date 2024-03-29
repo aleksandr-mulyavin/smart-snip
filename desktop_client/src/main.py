@@ -1,6 +1,6 @@
 import sys
 
-from .ui import SnipperApp
+from ui.snipper_app import SnipperApp
 
 # Точка запуска приложения
 if __name__ == "__main__":

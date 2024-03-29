@@ -1,6 +1,12 @@
+import logging
+
 from PIL.Image import Image
+from PyQt5 import QtGui
 
 from threading import Thread
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def __show_image(image: Image) -> None:
@@ -26,3 +32,19 @@ def open_stand_image_viewer(image: Image, in_new_thread: bool = True) -> None:
         thread.start()
     else:
         __show_image(image)
+
+
+def conv_to_pixmap(image: Image) -> QtGui.QPixmap:
+    try:
+        image_local = image.convert("RGBA")
+        image_data = image_local.tobytes("raw", "RGBA")
+        q_image = QtGui.QImage(image_data,
+                               image_local.size[0],
+                               image_local.size[1],
+                               QtGui.QImage.Format_ARGB32)
+        print(image.size[0], image.size[1])
+        print(image_local.size[0], image_local.size[1])
+        return QtGui.QPixmap.fromImage(q_image)
+    except Exception as e:
+        logging.exception(e)
+        return QtGui.QPixmap()

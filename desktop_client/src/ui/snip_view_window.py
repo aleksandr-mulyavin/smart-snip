@@ -1,11 +1,12 @@
 import logging
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PIL.Image import Image
 
-from ..controller import SnipperController
+from controller.snipper_controller import SnipperController
+from utils.resource import ResourceFinder
 from .snip_image_viewer import SnipImageViewer
-from ..api_models import OCRData
+from api_models import OCRData
+from utils.image_viewer import conv_to_pixmap
 
 MAX_WIDTH: int = 800
 MAX_HEIGHT: int = 600
@@ -25,11 +26,14 @@ class SnipViewWindow(QtWidgets.QMainWindow):
         # Конвертация изображения в QPixmap для Qt
         self._pixmap = QtGui.QPixmap()
         if self._controller.is_image_selected():
-            self._pixmap = self.__conv_to_pixmap(
+            self._pixmap = conv_to_pixmap(
                 self._controller.get_selected_image())
 
+        self._resource_finder = ResourceFinder()
+
         # Конфигурация окна виджета
-        self.__icon = QtGui.QIcon("../../icon.png")
+        self.__icon = QtGui.QIcon(str(self._resource_finder.find_resource_file(
+            file_name='icon.png').absolute()))
         self.setWindowIcon(self.__icon)
         self.setWindowTitle('Просмотр распознанного текста')
         # self.setMaximumSize(MAX_WIDTH,
@@ -44,14 +48,11 @@ class SnipViewWindow(QtWidgets.QMainWindow):
         self.__action_new_snip.triggered.connect(self.__on_new_snip)
         self.__action_scan_text = QtWidgets.QAction(QtGui.QIcon(), "Сканирование текста")
         self.__action_scan_text.triggered.connect(self.__on_scan_text)
-        self.__action_lasso = QtWidgets.QAction(QtGui.QIcon(), "Лассо")
-        self.__action_lasso.triggered.connect(self.__on_lasso)
 
         # Конфигурация тулбара
         self.__main_toolbar = self.addToolBar("Главное меню")
         self.__main_toolbar.addAction(self.__action_new_snip)
         self.__main_toolbar.addAction(self.__action_scan_text)
-        self.__main_toolbar.addAction(self.__action_lasso)
 
         # Формирование центрального лайоута виджета
         self.__layout_lvl0 = QtWidgets.QHBoxLayout()
@@ -130,25 +131,6 @@ class SnipViewWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(e)
 
-    def __on_lasso(self):
-        pass
-
-    @staticmethod
-    def __conv_to_pixmap(image: Image) -> QtGui.QPixmap:
-        try:
-            image_local = image.convert("RGBA")
-            image_data = image_local.tobytes("raw", "RGBA")
-            q_image = QtGui.QImage(image_data,
-                                   image_local.size[0],
-                                   image_local.size[1],
-                                   QtGui.QImage.Format_ARGB32)
-            print(image.size[0], image.size[1])
-            print(image_local.size[0], image_local.size[1])
-            return QtGui.QPixmap.fromImage(q_image)
-        except Exception as e:
-            logging.exception(e)
-            return QtGui.QPixmap()
-
     @staticmethod
     def __text_to_browser_processing(text: str) -> str:
         local_text = text.replace("\\n", "<br>")
@@ -164,7 +146,7 @@ class SnipViewWindow(QtWidgets.QMainWindow):
             # Конвертация изображения в QPixmap для Qt
             self._pixmap = QtGui.QPixmap()
             if self._controller.is_image_selected():
-                self._pixmap = self.__conv_to_pixmap(
+                self._pixmap = conv_to_pixmap(
                     self._controller.get_selected_image())
             self._image_viewer.set_photo(self._pixmap)
             self.show()

@@ -3,15 +3,30 @@
 {% block title %}Приложение{% endblock %}
 
 {% block content %}
-<div id="loadingModal" class="modal">
+<script>
+    function downloadImage() {
+        const imageSrc = document.getElementById('img-translated').src;
+        const link = document.createElement('a');
+        link.href = imageSrc;
+        link.download = "{{ image_filename }}";
+        link.click();
+    }
+    function showIndicator(text = "") {
+        const p = document.getElementById('indicator-text');
+        p.textContent = text;
+        $('#loading-indicator').show();
+    }
+</script>
+<div id="loading-indicator" class="modal">
     <div class="modal-content">
-        <p>Выполняется обработка изображения...</p>
+        <div class="spinner"></div>
+        <p id="indicator-text">Выполняется обработка изображения...</p>
     </div>
 </div>
 <div class="row" style="margin-top: 100px; color: white;">
     <div class="col-4 text-center" style="width: 35%; height: auto;">
         <div>
-            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 15px;">
+            <form action="" method="post" enctype="multipart/form-data" style="margin-top: 15px;" onsubmit="showIndicator('Загружается изображение...');">
                 {% csrf_token %}
                 <input type="hidden" name="form_type" value="upload_file">
                 {{ upload_file.as_p }}
@@ -41,19 +56,24 @@
                 sendDataToServer(
                     "translate_image", 
                     { img_src: imgSrc },
-                    function(response) {
+                    (response) => {
                         document.getElementById('img-translated').src = "data:image/jpeg;base64," + response;
-                        $('#loadingModal').hide();
-                    });
-                $('#loadingModal').show();
+                        document.getElementById('download-image-button').style = "display: block;";
+                    },
+                    () => {},
+                    (response) => {
+                        $('#loading-indicator').hide();
+                    }
+                );
+                showIndicator("Выполняется обработка изображения...");
             });
         </script>
         {% endif %}
     </div>
     <div class="col-4 text-center" style="width: 35%; height: auto;">
         <div>
-            <ul>
-                <a id="download-result" href="static/main/files/temp_file_for_the_test.txt" download><button class="btn btn-info" style="background-color: Aqua; margin-top: 45px;"><i class="bi bi-filetype-exe"></i> Скачать файл </button></a>
+            <ul id="download-image-button" style="display: {{ display_download_image_button }};">
+                <button class="btn btn-info" style="background-color: Aqua; margin-top: 45px;" onclick="downloadImage()"><i class="bi bi-filetype-exe"></i> Скачать файл </button>
             </ul>
             <img id="img-translated" src="data:image/jpeg;base64,{{ translated_image }}" style="border-radius: 3px; margin-top: 75px; width: 80%; height: auto;" class="img-fluid rounded" alt="">
         </div>

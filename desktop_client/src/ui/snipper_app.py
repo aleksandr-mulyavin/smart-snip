@@ -1,14 +1,19 @@
 import logging
+import os
 from typing import List
 
 from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication
 
+from utils.config_reader import ConfigReader
 from .snip_view_window import SnipViewWindow
-from ..controller import SnipperController
-from ..utils import QtKeyBinder
+from controller.snipper_controller import SnipperController
+from utils.sys_event_key import QtKeyBinder
+from utils.resource import ResourceFinder
+# from utils.image_viewer import conv_to_pixmap
+# from utils.api_caller import call_image_to_text
 
 LOGGER = logging.getLogger(__name__)
-SNIP_HOTKEY = "Ctrl+Shift+A"
 
 
 class SnipperApp(QtWidgets.QApplication):
@@ -22,6 +27,9 @@ class SnipperApp(QtWidgets.QApplication):
         """
         super(SnipperApp, self).__init__(argv)
         self.setQuitOnLastWindowClosed(False)
+
+        self._resource_finder = ResourceFinder()
+        self._config_reader = ConfigReader()
 
         # Настройка приложения
         self._config_app()
@@ -40,11 +48,13 @@ class SnipperApp(QtWidgets.QApplication):
         """
         # Привязка hotkey для выделения экрана
         self._sample_key_binder = QtKeyBinder(win_id=None)
-        self._sample_key_binder.register_hotkey(SNIP_HOTKEY, self._handle_activate_snipping)
+        self._sample_key_binder.register_hotkey(self._config_reader.snip_hotkey,
+                                                self._handle_activate_snipping)
 
         # Привязка иконки в системном трее
-        self._icon = QtGui.QIcon("../../icon.png")
         self._tray = QtWidgets.QSystemTrayIcon()
+        self._icon = QtGui.QIcon(str(self._resource_finder.find_resource_file(
+            file_name='icon.png').absolute()))
         self._tray.setIcon(self._icon)
         self._tray.setVisible(True)
 
@@ -68,11 +78,20 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu.addAction(self._img_menu_snip_view_action)
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
+        self._tray_menu_modal_translate = QtWidgets.QAction("Перевести")
+        self._tray_menu_modal_translate.triggered.connect(self._translate)
+        self._tray_menu.addAction(self._tray_menu_modal_translate)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
         # self._snipper.showFullScreen()
         # QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CrossCursor)
+
+    def _translate(self):
+        """
+        Обработчик события - Перевести
+        """
+        self.modal_translate()
 
     def _handle_snipping_finish(self):
         """
