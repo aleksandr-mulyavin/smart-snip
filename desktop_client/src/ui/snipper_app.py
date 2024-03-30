@@ -150,7 +150,7 @@ class SnipperApp(QtWidgets.QApplication):
             conv_to_pixmap(
                 self._snipper_controller.get_selected_image()))
 
-   def _handle_web_search(self): 
+   def _handle_web_search(self):
        if not self._snipper_controller.is_image_selected():
            return
        open_search_in_browser(
