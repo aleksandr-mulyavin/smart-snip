@@ -1,5 +1,6 @@
 import os
 from translate import Translator
+from translate.exceptions import TranslationError
 
 # Список языков в соответствии со стандартом ISO 639-1
 iso_639_1_languages = {
@@ -162,7 +163,12 @@ def get_to_text_translate(text, lang_code, from_='autodetect'):
         base_url=base_url,
     )
 
-    translated_text = translator.translate(text)
+    try:
+        translated_text = translator.translate(text)
+    except TranslationError as e:
+        translated_text = ''
+        print(str(e))
+
     if (from_ == 'autodetect'
             and translated_text == 'PLEASE SELECT TWO DISTINCT LANGUAGES'):
         return text
