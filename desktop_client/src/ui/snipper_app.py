@@ -90,6 +90,7 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu.addSeparator()
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
+        self._img_menu_web_search_action.triggered.connect(self._handle_web_search)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
@@ -148,3 +149,9 @@ class SnipperApp(QtWidgets.QApplication):
         clipboard.setPixmap(
             conv_to_pixmap(
                 self._snipper_controller.get_selected_image()))
+
+   def _handle_web_search(self): 
+       if not self._snipper_controller.is_image_selected():
+           return
+       open_search_in_browser(
+           self._snipper_controller.get_selected_image())
