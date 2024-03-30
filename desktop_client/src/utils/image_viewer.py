@@ -34,7 +34,7 @@ def open_stand_image_viewer(image: Image, in_new_thread: bool = True) -> None:
         __show_image(image)
 
 
-def conv_to_pixmap(image: Image) -> QtGui.QPixmap:
+def conv_to_pixmap(image: Image) -> QtGui.QPixmap | None:
     try:
         image_local = image.convert("RGBA")
         image_data = image_local.tobytes("raw", "RGBA")
@@ -47,4 +47,3 @@ def conv_to_pixmap(image: Image) -> QtGui.QPixmap:
         return QtGui.QPixmap.fromImage(q_image)
     except Exception as e:
         logging.exception(e)
-        return QtGui.QPixmap()
