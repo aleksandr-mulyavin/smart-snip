@@ -88,7 +88,7 @@ class SnipViewWindow(QtWidgets.QMainWindow):
             self.__main_toolbar = self.addToolBar("Главное меню")
             self.__main_toolbar.addAction(self.__action_new_snip)
             self.__main_toolbar.addAction(self.__action_scan_text)
-            self.__main_toolbar.addWidget(self._action_view_scan_text)
+            # self.__main_toolbar.addWidget(self._action_view_scan_text)
             self.__main_toolbar.addSeparator()
             self.__main_toolbar.addWidget(self.__action_color_sel)
             self.__main_toolbar.addAction(self.__action_drag_hand)
