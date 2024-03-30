@@ -12,6 +12,7 @@ from utils.sys_event_key import QtKeyBinder
 from utils.resource import ResourceFinder
 from utils.image_viewer import conv_to_pixmap
 from utils.api_caller import call_image_to_text
+from utils.image_search import open_search_in_browser
 
 
 LOGGER = logging.getLogger(__name__)
@@ -90,6 +91,7 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu.addSeparator()
         self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
+        self._img_menu_web_search_action.triggered.connect(self._handle_web_search)
 
     def _handle_activate_snipping(self):
         self._snipper_controller.start_snipping()
@@ -150,3 +152,9 @@ class SnipperApp(QtWidgets.QApplication):
         if pixmap is None:
             pixmap = QtGui.QPixmap()
         clipboard.setPixmap(pixmap)
+
+    def _handle_web_search(self):
+        if not self._snipper_controller.is_image_selected():
+            return
+        open_search_in_browser(
+            self._snipper_controller.get_selected_image())
