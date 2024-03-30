@@ -102,7 +102,7 @@ class SnipperApp(QtWidgets.QApplication):
         """
         self.new_window = translatess()
         self.new_window.show()
-        
+
 
     def _handle_snipping_finish(self):
         """
@@ -145,6 +145,8 @@ class SnipperApp(QtWidgets.QApplication):
         if not self._snipper_controller.is_image_selected():
             return
         clipboard = QApplication.clipboard()
-        clipboard.setPixmap(
-            conv_to_pixmap(
-                self._snipper_controller.get_selected_image()))
+        pixmap = conv_to_pixmap(
+                self._snipper_controller.get_selected_image())
+        if pixmap is None:
+            pixmap = QtGui.QPixmap()
+        clipboard.setPixmap(pixmap)

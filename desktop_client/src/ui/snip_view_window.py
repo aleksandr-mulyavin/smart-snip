@@ -33,6 +33,8 @@ class SnipViewWindow(QtWidgets.QMainWindow):
         if self._controller.is_image_selected():
             self._pixmap = conv_to_pixmap(
                 self._controller.get_selected_image())
+        if self._pixmap is None:
+            self._pixmap = QtGui.QPixmap()
         self._ocr_data: list[OCRData] = []
 
         self._resource_finder = ResourceFinder()
@@ -183,6 +185,8 @@ class SnipViewWindow(QtWidgets.QMainWindow):
             if self._controller.is_image_selected():
                 self._pixmap = conv_to_pixmap(
                     self._controller.get_selected_image())
+            if self._pixmap is None:
+                self._pixmap = QtGui.QPixmap()
             self._image_viewer.set_photo(self._pixmap)
             self.show()
         except Exception as e:
