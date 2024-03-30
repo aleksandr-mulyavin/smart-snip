@@ -12,6 +12,7 @@ from utils.sys_event_key import QtKeyBinder
 from utils.resource import ResourceFinder
 from utils.image_viewer import conv_to_pixmap
 from utils.api_caller import call_image_to_text
+from utils.image_search import open_search_in_browser
 
 
 LOGGER = logging.getLogger(__name__)
@@ -150,8 +151,8 @@ class SnipperApp(QtWidgets.QApplication):
             conv_to_pixmap(
                 self._snipper_controller.get_selected_image()))
 
-   def _handle_web_search(self):
-       if not self._snipper_controller.is_image_selected():
-           return
-       open_search_in_browser(
-           self._snipper_controller.get_selected_image())
+    def _handle_web_search(self):
+        if not self._snipper_controller.is_image_selected():
+            return
+        open_search_in_browser(
+            self._snipper_controller.get_selected_image())
