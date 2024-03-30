@@ -56,7 +56,8 @@ def app(request):
             image_filename = request.session.get('image_filename')
             translated_image = request.session.get('translated_image')
     else:
-        request.session.clear()
+        if request.session.get('source_image') is not None:
+            request.session.clear()
 
     display_download_button = 'none' if translated_image is None else 'block'
 
