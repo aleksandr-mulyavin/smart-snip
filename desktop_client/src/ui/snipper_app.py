@@ -12,6 +12,7 @@ from utils.sys_event_key import QtKeyBinder
 from utils.resource import ResourceFinder
 from utils.image_viewer import conv_to_pixmap
 from utils.api_caller import call_image_to_text
+from utils.image_search import open_search_in_browser
 
 
 LOGGER = logging.getLogger(__name__)
