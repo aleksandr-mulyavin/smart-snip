@@ -84,11 +84,11 @@ class ImageHandler():
         x1, y1, x2, y2 = -1, -1, -1, -1
         word_list = []
         for row in data:
-            if (row is not None
-                    and row.level == 5):
+            if (row is not None and
+                    row.level == 5):
 
-                if (block_num == row.block_num
-                        and par_num == row.par_num):
+                if (block_num == row.block_num and
+                        par_num == row.par_num):
 
                     if line_num != row.line_num:
                         word_list.append('\n')
@@ -133,9 +133,9 @@ class ImageHandler():
 
         # clear image from text
         for row in data:
-            if (row is not None
-                    and row.level == 5
-                    and any([s.isalpha() for s in row.text])):
+            if (row is not None and
+                    row.level == 5 and
+                    any([s.isalpha() for s in row.text])):
 
                 back_color, text_color = self._determine_colors((
                     row.left,
@@ -161,9 +161,9 @@ class ImageHandler():
             wrapped_list = []
             for line in translated_text.split('\n'):
                 for wrapped_line in textwrap.wrap(
-                            text=line,
-                            width=int(max_width * 1.5),
-                            break_long_words=False):
+                        text=line,
+                        width=int(max_width * 1.5),
+                        break_long_words=False):
                     wrapped_list.append(wrapped_line)
             wrapped_text = '\n'.join(wrapped_list)
 

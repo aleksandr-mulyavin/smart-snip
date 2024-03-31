@@ -168,7 +168,7 @@ def get_to_text_translate(text, lang_code, from_='autodetect'):
         translated_text = ''
         print(str(e))
 
-    if (from_ == 'autodetect'
-            and translated_text == 'PLEASE SELECT TWO DISTINCT LANGUAGES'):
+    if (from_ == 'autodetect' and
+            translated_text == 'PLEASE SELECT TWO DISTINCT LANGUAGES'):
         return text
     return translated_text
