@@ -41,7 +41,6 @@ iso_639_1_languages = {
     'fr': 'French',
     'gd': 'Gaelic',
     'gl': 'Galician',
-    'lg': 'Ganda',
     'ka': 'Georgian',
     'de': 'German',
     'ki': 'Gikuyu',
