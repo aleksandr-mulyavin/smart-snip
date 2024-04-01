@@ -6,21 +6,32 @@ from .api import APIImageHandler
 
 
 def home(request):
+    """
+    Функция home с помощью render объединяет main/home.html шаблон с предоставленным контекстом и возвращает объект
+    HttpResponse с отрендеренным HTML-текстом.
+    """
     return render(request, 'main/home.html')
 
 
 def app(request):
+    """
+    Функция app с помощью render объединяет main/app.html шаблон с предоставленным контекстом и возвращает объект
+    HttpResponse с отрендеренным HTML-текстом.
+    """
     source_text = 'Work'
     translated_text = get_to_text_translate(source_text, 'ru')
     translator_form = TranslatorForm(initial={
         'source_text': source_text,
         'translated_text': translated_text,
     })
+
+    # upload_file инициализирует форму для отображения в шаблоне
     upload_file = UploadFileForm()
     image_filename = ''
     encoded_image = None
     translated_image = None
 
+    # Проверка метода POST. Если пользовать загрузил изображение и оно валидно, получаем файл в кодировке base64
     if request.method == "POST":
         form_type = request.POST.get("form_type")
         if form_type == 'upload_file':
@@ -91,4 +102,8 @@ def translate_image(request):
 
 
 def about(request):
+    """
+    Функция about с помощью render объединяет main/about.html шаблон с предоставленным контекстом и возвращает объект
+    HttpResponse с отрендеренным HTML-текстом.
+    """
     return render(request, 'main/about.html')
