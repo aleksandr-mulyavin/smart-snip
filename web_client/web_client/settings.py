@@ -25,7 +25,7 @@ SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-if os.getenv("DJANGO_DEBUG") == 1:
+if os.getenv("DJANGO_DEBUG") == "1":
     DEBUG = True
 
 ALLOWED_HOSTS = os.getenv(
