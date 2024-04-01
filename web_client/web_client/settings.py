@@ -25,10 +25,12 @@ SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-if os.getenv('DJANGO_DEBUG') == 'True':
+if os.getenv("DJANGO_DEBUG") == 1:
     DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv(
+    "DJANGO_ALLOWED_HOSTS", default="[]"
+).split(" ")
 
 
 # Application definition
@@ -120,6 +122,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = BASE_DIR / 'static'
 
 STATICFILES_DIRS = [
     BASE_DIR / "main/static",
