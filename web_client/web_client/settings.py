@@ -25,8 +25,10 @@ SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-if os.getenv("DJANGO_DEBUG") == 1:
+print(f'DJANGO_DEBUG={os.getenv("DJANGO_DEBUG")}')
+if os.getenv("DJANGO_DEBUG") == "1":
     DEBUG = True
+    print('DEBUG!')
 
 ALLOWED_HOSTS = os.getenv(
     "DJANGO_ALLOWED_HOSTS", default="[]"
