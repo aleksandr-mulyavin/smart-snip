@@ -91,12 +91,15 @@ def app(request):
 
 def translate_image(request):
     img_src = request.POST.get("img_src")
+    selected_lang = request.POST.get("lang")
+    if selected_lang is None:
+        selected_lang = 'ru'
     translated_image = ''
     if img_src is not None:
         image_handler = APIImageHandler(
             encoded_image=img_src.removeprefix('data:image/jpeg;base64,')
         )
-        translated_image = image_handler.translate_image()
+        translated_image = image_handler.translate_image(selected_lang)
         request.session['translated_image'] = translated_image
     return HttpResponse(content=translated_image)
 

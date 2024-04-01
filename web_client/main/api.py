@@ -30,7 +30,7 @@ class APIImageHandler():
 
         return response.json()
 
-    def translate_image(self) -> str:
+    def translate_image(self, to_lang='ru') -> str:
         encoded_image = self.__encode_image()
         if encoded_image is None:
             return ''
@@ -39,7 +39,7 @@ class APIImageHandler():
             self.api_config.translate_image,
             TranslateImageTextRequest(
                 image=encoded_image,
-                to_lang='ru'
+                to_lang=to_lang
             )
         )
         translated = TranslateImageTextResponse.model_validate(

@@ -53,9 +53,11 @@
         <script>
             document.getElementById('translateImageBtn').addEventListener('click', function() {
                 var imgSrc = document.getElementById('img-app').src;
+                var selectElement = document.getElementById("id_lang_elements");
+                var selectedLang = selectElement.value;
                 sendDataToServer(
                     "translate_image", 
-                    { img_src: imgSrc },
+                    { img_src: imgSrc, lang: selectedLang },
                     (response) => {
                         document.getElementById('img-translated').src = "data:image/jpeg;base64," + response;
                         document.getElementById('download-image-button').style = "display: block;";
