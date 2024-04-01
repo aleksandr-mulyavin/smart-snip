@@ -3,12 +3,18 @@ from .translate_text import iso_639_1_languages
 
 
 class UploadFileForm(forms.Form):
+    """
+    Создает форму с одним полем для загрузки изображения
+    """
     file = forms.ImageField(label="")
 
 
 class TranslatorForm(forms.Form):
     """
-    Создает форму для выбора из выпадающего списка названия языков
+    Создает формы:
+    - поле для вывода исходного текста
+    - выпадающий список для выбора языка, на который нужно перевести текст
+    - поле для вывода теста после его перевода на другой язык
     """
     source_text = forms.CharField(
         widget=forms.Textarea,

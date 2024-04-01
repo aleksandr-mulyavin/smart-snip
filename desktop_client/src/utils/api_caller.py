@@ -1,11 +1,12 @@
+import os
 import requests
 import base64
 
 from io import BytesIO
 from PIL.Image import Image
 
-from ..api_models import Error, ImageToTextRequest
-from ..api_models import ImageToDataResponse
+from api_models import Error, ImageToTextRequest
+from api_models import ImageToDataResponse
 
 API_METHOD_TO_TEXT = 'image_to_text'
 API_METHOD_TO_DATA = 'image_to_data'
@@ -27,7 +28,16 @@ def call_image_to_text(url: str, token: str, image: Image) -> str:
         http_response = requests.post(f'{url}{API_METHOD_TO_TEXT}', headers=headers, json=request.model_dump(mode='json'))
         print(http_response, http_response.text)
         if http_response.status_code == requests.codes.ok:
-            return http_response.text
+            text = http_response.text
+            text = text.replace('\\n', os.linesep)
+            text = text[1:]
+            text = text[:-1]
+            print(text[:-2])
+            if text[:-2] == os.linesep:
+                text = text[:-1]
+            if text[:-2] == os.linesep:
+                text = text[:-1]
+            return text
     except Exception as e:
         print(e)
 

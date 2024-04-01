@@ -1,5 +1,134 @@
-#id_source_text, #id_translated_text {
+#body-style {
+    background-image: url('https://catherineasquithgallery.com/uploads/posts/2021-02/1613275155_19-p-sinii-fon-rombi-20.jpg');
+    overflow-x: hidden;
+}
+
+.row {
+    margin-top: 100px;
+}
+
+.col-4, #translator, #img-app, #img-translated {
+    height: auto;
+}
+
+#left-column, #right-column {
+    width: 35%;
+}
+
+#translateImageBtn, #upload-button {
+    background-color: #FF69B4;
+}
+
+#download-button {
+    background-color: Aqua;
+    margin-top: 45px;
+}
+
+#img-app, #form-translate-post, #submit-translate, #img-translated, #btn-download-exe, .btn-info {
+    border-radius: 3px;
+}
+
+#img-app, #about-team {
+    margin-top: 50px
+}
+
+#img-app, #logo-icon, .logo {
+    margin-left: 10px;
+}
+
+#img-app, #img-translated {
+    width: 80%;
+}
+
+#center_column {
+    width: 30%;
+}
+
+#form-translate {
+    margin-top: 10px;
+}
+
+#translator {
+    margin-top: 90px;
+    width: 70%;
+    margin-left: 80px;
+}
+
+#submit-translate {
+    margin-top: 30px;
+    background-color: #00FA9A;
+}
+
+#download-image-button {
+    display: {{ display_download_image_button }};
+}
+
+#img-translated {
+    margin-top: 75px;
+}
+
+#about-left-column, #about-right-column, #project-left-column, #project-right-column {
+    width: 20%;
+}
+
+#about-center-column, #project-center-column {
+    width: 60%;
+}
+
+#about-team, #text-project {
+    padding-left: 40px
+}
+
+#about-team, #text-project {
+    text-align: justify;
+}
+
+#about-team, .nav, #text-project {
+    font-size: 20px;
+}
+
+#team1, #team2, #team3, #team4, #team5, #team6, #upload-file {
+    margin-top: 15px;
+}
+
+#task1, #task2, #task3, #task4, #task5, #task6 {
+    margin-top: -15px;
+    font-style: italic;
+}
+
+#nav-background {
+    background: rgba(15, 13, 133, 0.3);
+}
+
+#logo-icon, .spinner:before {
+    width: 40px;
+}
+
+#logo-icon, #btn-download-exe {
+    margin-top: 2px;
+}
+
+#logo-icon {
+    float: left;
+}
+
+.logo {
+    margin-right: 1000px;
+}
+
+.nav-link, .logo, .row {
+    color: white;
+}
+
+#btn-download-exe {
+   background-color: #f6fa02f1;
+}
+
+#id_source_text, #id_translated_text, .modal {
     width: 100%;
+}
+
+#id_source_text, #id_translated_text {
     height: 200px;
     padding: 10px;
     font-size: 16px;
@@ -8,13 +137,16 @@
     margin: 0 10px 10px 0;
 }
 
+#text-project {
+    margin-top: 80px;
+}
+
 .modal {
     display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
 }
@@ -24,5 +156,25 @@
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: 250px;
+    text-align: center;
+}
+
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+  }
+   
+.spinner:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 40px;
+    margin-top: -20px;
+    margin-left: -20px;
+    border-radius: 50%;
+    border-top: 2px solid #07d;
+    border-right: 2px solid transparent;
+    animation: spinner .6s linear infinite;
 }

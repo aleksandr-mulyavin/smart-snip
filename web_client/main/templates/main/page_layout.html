@@ -1,5 +1,5 @@
-{% load static %}
 <!doctype html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,11 +9,12 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'main/css/main.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'main/image/favicon-32x32.png' %}" >
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
-<body style="background-image: url('https://pibig.info/uploads/posts/2022-11/1669679300_47-pibig-info-p-fon-cherno-fioletovii-oboi-48.jpg'); overflow-x: hidden;">
+<body id="body-style">
     <script>
-        function sendDataToServer(url, data, onSuccess) {
+        function sendDataToServer(url, data, onSuccess, onError, onComplete) {
             var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             $.ajax({
                 type: "POST",
@@ -22,31 +23,33 @@
                     'X-CSRFToken': csrftoken
                 },
                 data: data,
-                success: onSuccess
+                success: onSuccess,
+                error: onError,
+                complete: onComplete
             });
         }
     </script>
     <nav class="navbar-default">
         <div class="comtainer-fluid">
-            <div style="background: #2f1433fa; rgba(0, 0, 0, 0.5);">
-                <ul class="nav nav" style="font-size: 20px;">
+            <div id="nav-background">
+                <ul class="nav nav">
                     <li class="nav-item">
                         <a class="navbar-brand" href="#">
-                            <img id="logo-icon" style="width: 40px; float: left; margin-left: 10px; margin-top: 2px;" src="{% static 'main/image/logo_icon.png' %}" alt="Лого">
-                            <span class="logo fs-3" style="color: white; margin-left: 10px; margin-right: 1000px;">Умные ножницы</span>
+                            <img id="logo-icon" src="{% static 'main/image/logo_icon.png' %}" alt="Лого">
+                            <span class="logo fs-3">Умные ножницы</span>
                         </a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" style="color: white;" href="{% url 'home' %}" >О проекте</a>
+                        <a class="nav-link" href="{% url 'home' %}" >О проекте</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color: white;" href="{% url 'app' %}" >Приложение</a>
+                        <a class="nav-link" href="{% url 'app' %}" >Приложение</a>
                      </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color: white;" href="{% url 'about' %}">О нас</a>
+                        <a class="nav-link" href="{% url 'about' %}">О нас</a>
                     </li>
                     <li class="nav-item">
-                        <a href="static/main/files/temp_file_for_the_test.txt" download><li><button class="btn btn-info" style="background-color: #f6fa02f1; margin-top: 2px; border-radius: 3px;"><i class="bi bi-filetype-exe"></i> Скачать на ПК </button> </li></a>
+                        <a href="static/main/files/uploaded/desktop_client.zip" download><li><button id="btn-download-exe" class="btn btn-info"><i class="bi bi-filetype-exe"></i> Скачать на ПК </button> </li></a>
                     </li>
                 </ul>
             </div>

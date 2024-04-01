@@ -1,4 +1,4 @@
-# import os
+import textwrap
 import numpy as np
 from sklearn.cluster import KMeans
 from PIL import (
@@ -45,7 +45,8 @@ class ImageHandler():
 
         colors = sorted(
             [(percent, color) for (percent, color) in zip(hist, centroids)],
-            reverse=True
+            reverse=True,
+            key=lambda x: x[0]
         )
 
         if len(colors) > 1:
@@ -68,7 +69,7 @@ class ImageHandler():
             np.array(text_color, dtype=np.uint8)
         )
 
-    def translate_text(self, data: list[OCRData]) -> None:
+    def translate_text(self, data: list[OCRData], align='left') -> None:
         """Erases text from the image.
 
         Args:
@@ -76,41 +77,125 @@ class ImageHandler():
         """
         draw = ImageDraw.Draw(self.image)
 
+        # groups of words and coordinates
+        groups = []
+
+        block_num, par_num, line_num = 0, 0, 0
+        x1, y1, x2, y2 = -1, -1, -1, -1
+        word_list = []
         for row in data:
-            if row is not None and row.conf != -1:
+            if (row is not None and
+                    row.level == 5):
 
-                if row.text.strip() != '':
+                if (block_num == row.block_num and
+                        par_num == row.par_num):
 
-                    if (row.width > 10
-                            and row.height > 5
-                            and row.conf > 15
-                            and any([s.isalpha() for s in row.text])):
+                    if line_num != row.line_num:
+                        word_list.append('\n')
+                        line_num = row.line_num
 
-                        text = self.translator.translate(row.text)
-                        logger.info(text)
-
-                        back_color, text_color = self._determine_colors((
-                            row.left,
-                            row.top,
-                            row.left + row.width,
-                            row.top + row.height
-                        ))
-
-                        self.__clear_block(back_color, (
-                            row.left,
-                            row.top,
-                            row.left + row.width,
-                            row.top + row.height
-                        ))
-
-                        font = self.__get_font(draw, text, row.width)
-
-                        draw.text(
-                            xy=(row.left, row.top),
-                            text=text,
-                            font=font,
-                            fill=tuple(text_color)
+                    word_list.append(row.text)
+                    if x1 == -1 or x1 > row.left:
+                        x1 = row.left
+                    if y1 == -1 or y1 > row.top:
+                        y1 = row.top
+                    if x2 < row.left + row.width:
+                        x2 = row.left + row.width
+                    if y2 < row.top + row.height:
+                        y2 = row.top + row.height
+                else:
+                    if word_list:
+                        block = (x1, y1, x2, y2)
+                        _, text_color = self._determine_colors(
+                            block
                         )
+                        groups.append({
+                            'words': word_list,
+                            'block': block,
+                            'color': tuple(text_color)
+                        })
+                    block_num = row.block_num
+                    par_num = row.par_num
+                    line_num = row.line_num
+                    x1, y1 = row.left, row.top
+                    x2, y2 = row.left + row.width, row.top + row.height
+                    word_list = [row.text]
+        if word_list:
+            block = (x1, y1, x2, y2)
+            _, text_color = self._determine_colors(
+                block
+            )
+            groups.append({
+                'words': word_list,
+                'block': block,
+                'color': tuple(text_color)
+            })
+
+        # clear image from text
+        for row in data:
+            if (row is not None and
+                    row.level == 5 and
+                    any([s.isalpha() for s in row.text])):
+
+                back_color, text_color = self._determine_colors((
+                    row.left,
+                    row.top,
+                    row.left + row.width,
+                    row.top + row.height
+                ))
+                self.__clear_block(back_color, (
+                    row.left,
+                    row.top,
+                    row.left + row.width,
+                    row.top + row.height
+                ))
+
+        # draw text
+        for group in groups:
+
+            text = ' '.join(group.get('words'))
+            translated_text = self.translator.translate(text)
+
+            max_width = max([len(line) for line in text.split('\n')])
+
+            wrapped_list = []
+            for line in translated_text.split('\n'):
+                for wrapped_line in textwrap.wrap(
+                        text=line,
+                        width=int(max_width * 1.5),
+                        break_long_words=False):
+                    wrapped_list.append(wrapped_line)
+            wrapped_text = '\n'.join(wrapped_list)
+
+            block = group.get('block')
+
+            font = self.__get_font(
+                draw=draw,
+                text=wrapped_text,
+                block=block
+            )
+
+            if align == 'center':
+                xy = (
+                    (block[0] + block[2]) / 2,  # x
+                    (block[1] + block[3]) / 2   # y
+                )
+                anchor = 'mm'
+            else:
+                xy = block
+                anchor = 'la'
+
+            draw.multiline_text(
+                xy=xy,
+                text=wrapped_text,
+                font=font,
+                fill=group.get('color'),
+                anchor=anchor,
+                align=align,
+            )
+
+            # for debuging
+            # draw.rectangle(xy=block, outline=(255, 0, 0))
 
     def __clear_block(self, color, block):
         if block[0] > 0 and block[1] > 0:
@@ -140,17 +225,22 @@ class ImageHandler():
             cleaning_block,
             mask)
 
-    def __get_font(self, draw: ImageDraw, text: str, width: int) -> int:
+    def __get_font(self, draw: ImageDraw, text: str, block: tuple) -> int:
         size = 14
         font = self.__get_default_font(size)
         for _ in range(100):
-            lenght = draw.textlength(text, font)
-            if 0 <= (width - lenght) < 10:
-                break
-            if lenght > width:
-                if size < 5:
-                    break
+            box = draw.multiline_textbbox(
+                xy=(block[0], block[1]),
+                text=text,
+                font=font
+            )
+            if box[2] > block[2] or box[3] > block[3]:
                 size -= 1
+            elif ((0 <= (block[2] - box[2]) <= 10)
+                    or (0 <= (block[3] - box[3]) <= 10)):
+                # the box less then the block within 10 pixels
+                # stop search
+                break
             else:
                 size += 1
             font = self.__get_default_font(size)

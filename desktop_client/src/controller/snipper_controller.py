@@ -1,11 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from ..utils import open_stand_image_viewer, Image
-from ..utils import Config, ConfigReader
-from ..utils import call_image_to_text, call_image_to_data
-from ..api_models import OCRData
+from utils.image_viewer import open_stand_image_viewer, Image
+from utils.config_reader import Config, ConfigReader
+from utils.api_caller import call_image_to_text, call_image_to_data
+from api_models import OCRData
 
-from ..ui.snipping_widget import SnippingWidget
+from ui.snipping_widget import SnippingWidget
 
 
 class SnipperController(QtCore.QObject):
