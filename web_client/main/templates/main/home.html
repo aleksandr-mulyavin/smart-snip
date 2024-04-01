@@ -1,12 +1,13 @@
 {% extends 'main/page_layout.html' %}
 {% block title %}О проекте{% endblock %}
+{% load static %}
 
 {% block content %}
-<div class="row" style="margin-top: 100px; color: white;">
-    <div class="col-4" style="width: 20%"></div>
-    <div class="col-4" style="width: 60%">
+<div class="row">
+    <div id="project-left-column" class="col-4"></div>
+    <div id="project-center-column" class="col-4">
         <h1 class= "text-center">О проекте</h1>
-        <div style="margin-top: 80px; padding-left: 40px; text-align: justify; font-size: 20px;">
+        <div id="text-project">
             <p>Цель проекта: cоздание инструмента для упрощения работы с изображениями.</p>
             <p>Главной целью нашего проекта является разработка инновационного инструмента, который позволит существенно упростить и автоматизировать работу с изображениями. Такой инструмент будет особенно полезен в ситуациях, когда необходимо выполнить следующие задачи:
                 <ul>
@@ -19,7 +20,7 @@
             </p>
         </div>
     </div>
-    <div class="col-4" style="width: 20%">
+    <div id="project-right-column" class="col-4">
     </div>
 </div>
 {% endblock %}

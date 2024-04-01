@@ -1,29 +1,30 @@
 {% extends 'main/page_layout.html' %}
 {% block title %}О нас{% endblock %}
+{% load static %}
 
 {% block content %}
-<div class="row" style="margin-top: 100px; color: white;">
-    <div class="col-4" style="width: 20%"></div>
-    <div class="col-4" style="width: 60%">
+<div class="row">
+    <div id="about-left-column" class="col-4"></div>
+    <div id="about-center-column" class="col-4">
         <h1 class= "text-center">Наша команда</h1>
-        <div style="margin-top: 50px; padding-left: 40px; text-align: justify; font-size: 20px;">
+        <div id="about-team">
             <ul>
-                <li><p><strong>Екатерина Зверева</strong></p></li>
-                <p style="margin-top: -15px; font-style: italic;"><small> Разработка веб-приложения на Django, настройка структуры страниц, размещение элементов на странице, включая кнопки, поля, и другие элементы с помощью Python, HTML, CSS. Настройка оформления приложения. Работа над необходимыми настройками для корректной работы веб-приложения в settings.py.</small></p>
-                <li><p style="margin-top: 15px;"><strong>Александр Мулявин</strong></p></li>
-                <p style="margin-top: -15px; font-style: italic;"><small>Разрабoтка десктопного приложения, виджетов выделения и окна просмотра изображения с помощью PyQt5.</small></p>
-                <li><p style="margin-top: 15px;"><strong>Александр Кузнецов</strong></p></li>
-                <p style="margin-top: -15px; font-style: italic;"><small>Разработка API для сервиса распознавания текста (OCR). Выбор и установка библиотеки OCR. Замена текста изображения на переведенный. Развертывание сервисов (API, Web, LibreTranslate) с помощью Docker. Настройка кнопок, полей в веб- приложении на Джанго.</small></p>
-                <li><p  style="margin-top: 15px;"><strong>Денис Косташ</strong></p></li>
-                <p style="margin-top: -15px; font-style: italic;"><small>Разработка функционала на десктопном приложении для перевода текста на другой язык с помощью PyQt5. Разработка документации для десктопного приложения. </small></p>
-                <li><p  style="margin-top: 15px;"><strong>Влад Телегинский</strong></p></li>
-                <p style="margin-top: -15px; font-style: italic;"><small>Разработка функционала для отправки поискового запроса с использованием выделенного пользователем изображения в качестве поискового запроса в системе Yandex с помощью PyQt5.</small></p>
-                <li><p  style="margin-top: 15px;"><strong>Сергей Одинцов</strong></p></li>
-                <p style="margin-top: -15px; font-style: italic;"><small>Разработка функционала для перевода текста на другой язык с помощью LibreTranslate. Добавление копирования изображения в буфер,  обрезки текста и преобразования переноса строк, распознавания и копирования текста в буфер с помощью PyQt5. Разработка документации для веб-приложения.</small></p>
+                <li><p id="team1"><strong>Екатерина Зверева</strong></p></li>
+                <p id="task1"><small> Разработка веб-приложения на Django, настройка структуры страниц, размещение элементов на странице, включая кнопки, поля, и другие элементы с помощью Python, HTML, CSS. Настройка оформления приложения. Работа над необходимыми настройками для корректной работы веб-приложения в settings.py.</small></p>
+                <li><p id="team2"><strong>Александр Мулявин</strong></p></li>
+                <p id="task2"><small>Разрабoтка десктопного приложения, виджетов выделения и окна просмотра изображения с помощью PyQt5.</small></p>
+                <li><p id="team3"><strong>Александр Кузнецов</strong></p></li>
+                <p id="task3"><small>Разработка API для сервиса распознавания текста (OCR). Выбор и установка библиотеки OCR. Замена текста изображения на переведенный. Развертывание сервисов (API, Web, LibreTranslate) с помощью Docker. Настройка кнопок, полей в веб- приложении на Джанго.</small></p>
+                <li><p id="team4"><strong>Денис Косташ</strong></p></li>
+                <p id="task4"><small>Разработка функционала на десктопном приложении для перевода текста на другой язык с помощью PyQt5. Разработка документации для десктопного приложения. </small></p>
+                <li><p id="team5"><strong>Влад Телегинский</strong></p></li>
+                <p id="task5"><small>Разработка функционала для отправки поискового запроса с использованием выделенного пользователем изображения в качестве поискового запроса в системе Yandex с помощью PyQt5.</small></p>
+                <li><p id="team6"><strong>Сергей Одинцов</strong></p></li>
+                <p id="task6"><small>Разработка функционала для перевода текста на другой язык с помощью LibreTranslate. Добавление копирования изображения в буфер,  обрезки текста и преобразования переноса строк, распознавания и копирования текста в буфер с помощью PyQt5. Разработка документации для веб-приложения.</small></p>
             </ul>
         </div>
     </div>
-    <div class="col-4" style="width: 20%">
+    <div id="about-right-column" class="col-4">
     </div>
 </div>
 {% endblock %}
