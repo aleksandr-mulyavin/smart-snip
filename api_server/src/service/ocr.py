@@ -90,7 +90,7 @@ def image_to_data(
 
         data = [line for line in str_data.split('\n')]
 
-        result = [OCRData.from_str(line) for line in data[1:]]
+        result = [OCRData.from_str(line, __logger) for line in data[1:]]
         while None in result:
             result.remove(None)
 
@@ -138,7 +138,7 @@ def translate_image_text(
 
         data = [line for line in str_data.split('\n')]
 
-        image_data = [OCRData.from_str(line) for line in data[1:]]
+        image_data = [OCRData.from_str(line, __logger) for line in data[1:]]
 
         image_handler.translate_text(data=image_data)
 
