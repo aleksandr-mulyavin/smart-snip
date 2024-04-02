@@ -1,11 +1,9 @@
 from pydantic import BaseModel
 
-from ..service.logging import get_logger
-
-logger = get_logger(__name__)
-
 
 class OCRData(BaseModel):
+    """Class of a recognized text block
+    """
     level: int
     page_num: int
     block_num: int
@@ -20,7 +18,9 @@ class OCRData(BaseModel):
     text: str
 
     @staticmethod
-    def from_str(string: str):
+    def from_str(string: str, logger):
+        """The function to create an instance of the class from a string.
+        """
         row = [x for x in string.split('\t')]
         if len(row) == 12:
             try:

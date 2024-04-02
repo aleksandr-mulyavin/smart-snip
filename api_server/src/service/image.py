@@ -8,10 +8,7 @@ from PIL import (
     ImageFont
 )
 
-from .logging import get_logger
 from ..domain.ocr import OCRData
-
-logger = get_logger(__name__)
 
 
 class ImageHandler():
@@ -22,7 +19,7 @@ class ImageHandler():
         self.translator = translator
 
     def _determine_colors(self, coords: tuple | None) -> tuple:
-        """Determines the background color of the image using KMeans.
+        """Determines main colors of the image using KMeans.
         """
         # prepare image for KMeans
         if coords is None:
@@ -70,10 +67,8 @@ class ImageHandler():
         )
 
     def translate_text(self, data: list[OCRData], align='left') -> None:
-        """Erases text from the image.
-
-        Args:
-            data (list[OCRData]): data returned by pytesseract.image_to_data
+        """The function removes text from the entire image,
+        translates the text and places it on the image.
         """
         draw = ImageDraw.Draw(self.image)
 
@@ -84,11 +79,11 @@ class ImageHandler():
         x1, y1, x2, y2 = -1, -1, -1, -1
         word_list = []
         for row in data:
-            if (row is not None and
-                    row.level == 5):
+            if row is not None \
+                    and row.level == 5:
 
-                if (block_num == row.block_num and
-                        par_num == row.par_num):
+                if block_num == row.block_num \
+                        and par_num == row.par_num:
 
                     if line_num != row.line_num:
                         word_list.append('\n')
@@ -133,9 +128,9 @@ class ImageHandler():
 
         # clear image from text
         for row in data:
-            if (row is not None and
-                    row.level == 5 and
-                    any([s.isalpha() for s in row.text])):
+            if row is not None \
+                    and row.level == 5 \
+                    and any([s.isalpha() for s in row.text]):
 
                 back_color, text_color = self._determine_colors((
                     row.left,
@@ -198,6 +193,8 @@ class ImageHandler():
             # draw.rectangle(xy=block, outline=(255, 0, 0))
 
     def __clear_block(self, color, block):
+        """The function removes text from the image block.
+        """
         if block[0] > 0 and block[1] > 0:
             cleaning_block = (
                 block[0] - 1,
@@ -226,6 +223,9 @@ class ImageHandler():
             mask)
 
     def __get_font(self, draw: ImageDraw, text: str, block: tuple) -> int:
+        """The function adjusts the font size so
+        that the text fits within the block size.
+        """
         size = 14
         font = self.__get_default_font(size)
         for _ in range(100):
@@ -236,8 +236,8 @@ class ImageHandler():
             )
             if box[2] > block[2] or box[3] > block[3]:
                 size -= 1
-            elif ((0 <= (block[2] - box[2]) <= 10)
-                    or (0 <= (block[3] - box[3]) <= 10)):
+            elif (0 <= (block[2] - box[2]) <= 10) \
+                    or (0 <= (block[3] - box[3]) <= 10):
                 # the box less then the block within 10 pixels
                 # stop search
                 break
@@ -249,20 +249,20 @@ class ImageHandler():
 
     @staticmethod
     def __get_default_font(size: int):
+        """The function return True type font: Arial.
+        """
         return ImageFont.truetype('arial.ttf', size)
 
     @staticmethod
-    def __erode(image, cycles, size=3):
-        for _ in range(cycles):
-            image = image.filter(ImageFilter.MinFilter(size))
-        return image
-
-    @staticmethod
     def __dilate(image, cycles, size=3):
+        """The function enlarges the mask.
+        """
         for _ in range(cycles):
             image = image.filter(ImageFilter.MaxFilter(size))
         return image
 
     @staticmethod
     def __blur(image, radius=1):
+        """The function blur the mask.
+        """
         return image.filter(ImageFilter.BoxBlur(radius))

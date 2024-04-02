@@ -3,6 +3,8 @@ from translate import Translator as ExtTranslator
 
 
 class Translator():
+    """Class for translating text.
+    """
     def __init__(self, to_lang, from_lang='en'):
         self.from_lang = from_lang
         self.to_lang = to_lang
@@ -13,6 +15,9 @@ class Translator():
         self.base_url = os.getenv('TRANSLATE_BASE_URL')
 
     def translate(self, text: str) -> str:
+        """The function translates text from language self.from_lang
+        to language self.to_lang using service from self.provider.
+        """
         translator = ExtTranslator(
             to_lang=self.to_lang,
             from_lang=self.from_lang,

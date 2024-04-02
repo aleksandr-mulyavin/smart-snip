@@ -12,10 +12,12 @@ from ..domain.ocr import OCRData
 from .image import ImageHandler
 from .translating import Translator
 
-logger = get_logger(__name__)
+__logger = get_logger(__name__)
 
 
 def image_from_base64(image_base64: str) -> Image:
+    """The function returns an image from a base64 string.
+    """
     return Image.open(BytesIO(base64.b64decode(image_base64)))
 
 
@@ -44,10 +46,10 @@ def image_to_string(
         )
 
     except UnidentifiedImageError as image_error:
-        logger.error(str(image_error))
+        __logger.error(str(image_error))
 
     except RuntimeError as timeout_error:
-        logger.error(str(timeout_error))
+        __logger.error(str(timeout_error))
 
     except Exception:
         exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -58,7 +60,7 @@ def image_to_string(
             'type': exc_type.__name__,
             'message': str(exc_value)
         }
-        logger.error(traceback_details)
+        __logger.error(traceback_details)
 
     return result
 
@@ -88,12 +90,12 @@ def image_to_data(
 
         data = [line for line in str_data.split('\n')]
 
-        result = [OCRData.from_str(line) for line in data[1:]]
+        result = [OCRData.from_str(line, __logger) for line in data[1:]]
         while None in result:
             result.remove(None)
 
     except Exception as e:
-        logger.error(str(e))
+        __logger.error(str(e))
 
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback_details = {
@@ -103,7 +105,7 @@ def image_to_data(
             'type': exc_type.__name__,
             'message': str(exc_value)
         }
-        logger.error(traceback_details)
+        __logger.error(traceback_details)
 
     return result
 
@@ -113,6 +115,10 @@ def translate_image_text(
     from_lang: str = 'en',
     to_lang: str = 'ru',
 ) -> str:
+    """The function removes text from the entire image,
+    translates the text and places it on the image and
+    return the image in base64 format.
+    """
     result = ''
 
     image = image_from_base64(image_base64)
@@ -132,10 +138,9 @@ def translate_image_text(
 
         data = [line for line in str_data.split('\n')]
 
-        image_data = [OCRData.from_str(line) for line in data[1:]]
+        image_data = [OCRData.from_str(line, __logger) for line in data[1:]]
 
         image_handler.translate_text(data=image_data)
-        # image.save('result.png')
 
         buffered = BytesIO()
         image.save(buffered, format=image.format)
@@ -143,7 +148,7 @@ def translate_image_text(
         result = base64.b64encode(buffered.getvalue())
 
     except Exception as e:
-        logger.error(str(e))
+        __logger.error(str(e))
 
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback_details = {
@@ -153,10 +158,12 @@ def translate_image_text(
             'type': exc_type.__name__,
             'message': str(exc_value)
         }
-        logger.error(traceback_details)
+        __logger.error(traceback_details)
 
     return result
 
 
 def get_languages():
+    """The function returns the list of supported languages.
+    """
     return pytesseract.get_languages()
