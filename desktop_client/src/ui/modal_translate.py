@@ -1,5 +1,5 @@
-# Импортируем библиотеки
 import sys
+
 from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QPushButton, QVBoxLayout, QComboBox
 from PyQt5.QtCore import Qt
 from googletrans import Translator
@@ -7,30 +7,37 @@ from googletrans import Translator
 class translatess(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        self.init_ui()
 
-    #Функция для копирования текста
     def copy_text(self):
+        """
+        Обработчик события - копирование текста
+        """
         text = self.output_text.toPlainText()
         QApplication.clipboard().setText(text)
 
-    #Функция для вставки текста
     def paste_text(self):
+        """
+        Обработчик события - вставка текста
+        """
         text = QApplication.clipboard().text()
         self.entry_text.insertPlainText(text)
 
-    # Функция для обработки нажатия кнопки "перевести"
     def translate_text(self):
+        """
+        Обработчик события - нажатие кнопки "перевести"
+        """
         translator = Translator()
         translated_text = translator.translate(self.entry_text.toPlainText(), dest=self.selected_language.currentText()).text
         self.output_text.setPlainText(translated_text)
 
-    # Создание основного окна
-    def initUI(self):
+    def init_ui(self):
+        """
+        Создание основного окна для переводчика
+        """
         self.setWindowTitle("Выберите язык и введите/вставьте текст, который нужно перевести: ")
 
-        # вертикальное расположение элементов интерфейса
-        layout = QVBoxLayout()
+        layout = QVBoxLayout() # вертикальное расположение элементов интерфейса
 
         # Поле для ввода текста
         self.entry_text = QTextEdit()

@@ -14,9 +14,7 @@ from utils.image_viewer import conv_to_pixmap
 from utils.api_caller import call_image_to_text
 from utils.image_search import open_search_in_browser
 
-
-LOGGER = logging.getLogger(__name__)
-
+LOGGER = logging.getLogger("SnipperApp")
 
 class SnipperApp(QtWidgets.QApplication):
     """
@@ -27,7 +25,7 @@ class SnipperApp(QtWidgets.QApplication):
         """
         Конструктор класса
         """
-        super(SnipperApp, self).__init__(argv)
+        super().__init__(argv)
         self.setQuitOnLastWindowClosed(False)
 
         self._resource_finder = ResourceFinder()
@@ -40,10 +38,6 @@ class SnipperApp(QtWidgets.QApplication):
         self._snipper_controller = SnipperController()
         self._snipper_controller.on_snipping_finish.connect(self._handle_snipping_finish)
 
-        # Инициализация виджета выделения (ножниц) и перехват событий
-        # self._snipper = SnippingWidget()
-        # self._snipper.on_snipping_finish.connect(self._handle_snipping_finish)
-
     def _config_app(self) -> None:
         """
         Метод конфигурации приложения
@@ -55,8 +49,7 @@ class SnipperApp(QtWidgets.QApplication):
 
         # Привязка иконки в системном трее
         self._tray = QtWidgets.QSystemTrayIcon()
-        self._icon = QtGui.QIcon(str(self._resource_finder.find_resource_file(
-            file_name='icon.png').absolute()))
+        self._icon = QtGui.QIcon(str(self._resource_finder.find_resource_file(file_name='icon.png').absolute()))
         self._tray.setIcon(self._icon)
         self._tray.setVisible(True)
 
@@ -94,9 +87,10 @@ class SnipperApp(QtWidgets.QApplication):
         self._img_menu_web_search_action.triggered.connect(self._handle_web_search)
 
     def _handle_activate_snipping(self):
+        """
+        Активация процесса выделения области
+        """
         self._snipper_controller.start_snipping()
-        # self._snipper.showFullScreen()
-        # QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CrossCursor)
 
     def _translate(self):
         """
@@ -104,7 +98,6 @@ class SnipperApp(QtWidgets.QApplication):
         """
         self.new_window = translatess()
         self.new_window.show()
-
 
     def _handle_snipping_finish(self):
         """
@@ -115,7 +108,7 @@ class SnipperApp(QtWidgets.QApplication):
         try:
             self._img_menu.exec_(QtGui.QCursor.pos())
         except Exception as e:
-            logging.exception(e)
+            logging.exception("An error occurred when handling snipping finish event", exc_info=True)
 
     def _handle_stand_view(self):
         """
@@ -133,6 +126,9 @@ class SnipperApp(QtWidgets.QApplication):
         self._snip_viewer.show()
 
     def _handle_recognize_and_copy(self):
+        """
+        Обработчик события - Распознать и скопировать в буфер
+        """
         if not self._snipper_controller.is_image_selected():
             return
         text = call_image_to_text(
@@ -144,16 +140,19 @@ class SnipperApp(QtWidgets.QApplication):
             clipboard.setText(text)
 
     def _handle_snip_and_copy(self):
+        """
+        Обработчик события - Скопировать в буфер
+        """
         if not self._snipper_controller.is_image_selected():
             return
         clipboard = QApplication.clipboard()
-        pixmap = conv_to_pixmap(
-                self._snipper_controller.get_selected_image())
-        if pixmap is None:
-            pixmap = QtGui.QPixmap()
+        pixmap = conv_to_pixmap(self._snipper_controller.get_selected_image()) or QtGui.QPixmap()
         clipboard.setPixmap(pixmap)
 
     def _handle_web_search(self):
+        """
+        Обработчик события - Поиск в Интернете
+        """
         if not self._snipper_controller.is_image_selected():
             return
         open_search_in_browser(
