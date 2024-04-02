@@ -2,10 +2,12 @@ from pydantic import BaseModel
 
 from ..service.logging import get_logger
 
-logger = get_logger(__name__)
+__logger = get_logger(__name__)
 
 
 class OCRData(BaseModel):
+    """Class of a recognized text block
+    """
     level: int
     page_num: int
     block_num: int
@@ -21,6 +23,8 @@ class OCRData(BaseModel):
 
     @staticmethod
     def from_str(string: str):
+        """The function to create an instance of the class from a string.
+        """
         row = [x for x in string.split('\t')]
         if len(row) == 12:
             try:
@@ -39,9 +43,9 @@ class OCRData(BaseModel):
                     text=row[11],
                 )
             except ValueError as e:
-                logger.error(f'{str(e)}:\n{row}')
+                __logger.error(f'{str(e)}:\n{row}')
         else:
-            logger.error(
+            __logger.error(
                 'the number of elements in the string '
                 f'is not equal to 12 :\n{row}'
             )
