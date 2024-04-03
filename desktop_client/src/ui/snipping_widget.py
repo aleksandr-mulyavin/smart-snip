@@ -1,5 +1,4 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 from PIL import ImageGrab
 from PIL.Image import Image
 
@@ -16,9 +15,13 @@ class SnippingWidget(QtWidgets.QMainWindow):
         """
         Конструктор класса
         """
-        super(SnippingWidget, self).__init__(parent)
+        super().__init__(parent)
+        self.setup_snipping_widget()
 
-        # Настройка экрана для области выделения
+    def setup_snipping_widget(self):
+        """
+        Настройка экрана для области выделения
+        """
         self.setAttribute(QtCore.Qt.WA_NoSystemBackground, True)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.setStyleSheet("background:transparent;")
@@ -27,13 +30,16 @@ class SnippingWidget(QtWidgets.QMainWindow):
         # Параметры для области выделения
         self._outsideSquareColor = "red"
         self._squareThickness = 2
-        self._start_point = QtCore.QPoint()
-        self._end_point = QtCore.QPoint()
+        self._start_point = QtCore.QPointF()
+        self._end_point = QtCore.QPointF()
 
         # Выделенное изображение
         self._image = None
 
     def start_snipping(self):
+        """
+        Захват области экрана
+        """
         self.showFullScreen()
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CrossCursor)
         self.on_snipping_start.emit()
@@ -71,35 +77,35 @@ class SnippingWidget(QtWidgets.QMainWindow):
         self.hide()
 
         # Обнуление позиций
-        self._start_point = QtCore.QPoint()
-        self._end_point = QtCore.QPoint()
+        self._start_point = QtCore.QPointF()
+        self._end_point = QtCore.QPointF()
 
     def paintEvent(self, event):
         """
         Обработка события отрисовки виджета
         :param event: Данные события
         """
-        trans = QtGui.QColor(22, 100, 233)
-        r = QtCore.QRectF(self._start_point, self._end_point).normalized()
-        qp = QtGui.QPainter(self)
-        trans.setAlphaF(0.2)
-        qp.setBrush(trans)
+        trans_color = QtGui.QColor(22, 100, 233)
+        selected_rect = QtCore.QRectF(self._start_point, self._end_point).normalized()
+        painter = QtGui.QPainter(self)
+        trans_color.setAlphaF(0.2)
+        painter.setBrush(trans_color)
         outer = QtGui.QPainterPath()
         outer.addRect(QtCore.QRectF(self.rect()))
         inner = QtGui.QPainterPath()
-        inner.addRect(r)
-        r_path = outer - inner
-        qp.drawPath(r_path)
-        qp.setPen(
+        inner.addRect(selected_rect)
+        removing_path = outer - inner
+        painter.drawPath(removing_path)
+        painter.setPen(
             QtGui.QPen(
                 QtGui.QColor(self._outsideSquareColor),
                 self._squareThickness)
         )
-        trans.setAlphaF(0)
-        qp.setBrush(trans)
-        qp.drawRect(r)
+        trans_color.setAlphaF(0)
+        painter.setBrush(trans_color)
+        painter.drawRect(selected_rect)
 
-    def get_selected_image(self) -> Image | None:
+    def get_selected_image(self) -> Image or None:
         """
         Получение выделенного изображения
         :return: Выделенное изображение
