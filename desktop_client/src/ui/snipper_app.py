@@ -109,7 +109,7 @@ class SnipperApp(QtWidgets.QApplication):
             return
         try:
             self._img_menu.exec_(QtGui.QCursor.pos())
-        except Exception as e:
+        except Exception:
             logging.exception("An error occurred when handling snipping finish event", exc_info=True)
 
     def _handle_stand_view(self):
