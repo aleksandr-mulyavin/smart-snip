@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QPushButton, QVBox
 from PyQt5.QtCore import Qt
 from googletrans import Translator
 
+
 class translatess(QWidget):
     def __init__(self):
         super().__init__()
@@ -37,12 +38,13 @@ class translatess(QWidget):
         """
         self.setWindowTitle("Выберите язык и введите/вставьте текст, который нужно перевести: ")
 
-        layout = QVBoxLayout() # вертикальное расположение элементов интерфейса
+        # вертикальное расположение элементов интерфейса
+        layout = QVBoxLayout()
 
         # Поле для ввода текста
         self.entry_text = QTextEdit()
-        self.entry_text.setFixedHeight(200) # длинна поля
-        self.entry_text.setFixedWidth(600)  # ширина поля
+        self.entry_text.setFixedHeight(200)  # длинна поля
+        self.entry_text.setFixedWidth(600)   # ширина поля
         layout.addWidget(self.entry_text)
 
         # Кнопка вставки текста
@@ -51,11 +53,11 @@ class translatess(QWidget):
         layout.addWidget(self.btn_paste)
 
         # Выпадающий список с выбором языка
-        languages = ["English", "French", "German", "Russian"] # Список доступных языков
+        languages = ["English", "French", "German", "Russian"]  # Список доступных языков
         self.selected_language = QComboBox()
         self.selected_language.addItems(languages)
-        self.selected_language.setCurrentText("English") # Устанавливаем язык по умолчанию - английский
-        layout.addWidget(self.selected_language, alignment=Qt.AlignCenter)  # выравнивание по центру
+        self.selected_language.setCurrentText("English")  # Устанавливаем язык по умолчанию - английский
+        layout.addWidget(self.selected_language, alignment=Qt.AlignCenter)   # выравнивание по центру
 
         # Кнопка перевести
         self.translate_button = QPushButton("Перевести")
@@ -64,8 +66,8 @@ class translatess(QWidget):
 
         # Поле для вывода переведенного текста
         self.output_text = QTextEdit()
-        self.output_text.setFixedHeight(200) # длина поля
-        self.output_text.setFixedWidth(600)  # ширина поля
+        self.output_text.setFixedHeight(200)  # длина поля
+        self.output_text.setFixedWidth(600)   # ширина поля
         layout.addWidget(self.output_text)
 
         # Кнопка для копирования

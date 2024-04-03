@@ -14,7 +14,9 @@ from utils.image_viewer import conv_to_pixmap
 from utils.api_caller import call_image_to_text
 from utils.image_search import open_search_in_browser
 
+
 LOGGER = logging.getLogger("SnipperApp")
+
 
 class SnipperApp(QtWidgets.QApplication):
     """
@@ -154,6 +156,4 @@ class SnipperApp(QtWidgets.QApplication):
         Обработчик события - Поиск в Интернете
         """
         if not self._snipper_controller.is_image_selected():
-            return
-        open_search_in_browser(
-            self._snipper_controller.get_selected_image())
+            return open_search_in_browser(self._snipper_controller.get_selected_image())
