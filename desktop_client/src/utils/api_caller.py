@@ -5,7 +5,7 @@ import base64
 from io import BytesIO
 from PIL.Image import Image
 
-from api_models import Error, ImageToTextRequest
+from api_models import ImageToTextRequest
 from api_models import ImageToDataResponse
 
 API_METHOD_TO_TEXT = 'image_to_text'

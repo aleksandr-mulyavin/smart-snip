@@ -1,5 +1,5 @@
 import logging
-import os
+# import os
 from typing import List
 
 from PyQt5 import QtGui, QtWidgets
@@ -68,8 +68,6 @@ class SnipperApp(QtWidgets.QApplication):
         self._tray_menu_quit_action.triggered.connect(self.quit)
         self._tray_menu.addAction(self._tray_menu_quit_action)
         self._tray.setContextMenu(self._tray_menu)
-
-
         # Настройка контекстного меню выделенного изображения
         self._img_menu = QtWidgets.QMenu()
         self._img_menu_stand_view_action = QtWidgets.QAction("Показать в просмотрщике")
