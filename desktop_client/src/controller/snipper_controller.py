@@ -70,4 +70,3 @@ class SnipperController(QtCore.QObject):
     def _on_snipping_finish(self):
         self.on_snipping_finish.emit()
         self._image = self._snipper.get_selected_image()
-
