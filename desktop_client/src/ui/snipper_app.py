@@ -157,3 +157,5 @@ class SnipperApp(QtWidgets.QApplication):
         """
         if not self._snipper_controller.is_image_selected():
             return open_search_in_browser(self._snipper_controller.get_selected_image())
+        open_search_in_browser(
+            self._snipper_controller.get_selected_image())
