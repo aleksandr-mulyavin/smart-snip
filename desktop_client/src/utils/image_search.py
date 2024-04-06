@@ -7,6 +7,9 @@ from PIL.Image import Image
 
 
 def get_link_for_search_in_yandex(image: Image) -> str:
+    """
+    Функция формирования url для поисковой системы
+    """
     search_url = 'https://yandex.ru/images/search'
 
     img_byte_arr = io.BytesIO()
@@ -22,6 +25,9 @@ def get_link_for_search_in_yandex(image: Image) -> str:
 
 
 def open_search_in_browser(image: Image) -> None:
+    """
+    Функция автоматического запуска браузера с соответсвующим запросом
+    """
     search_url = get_link_for_search_in_yandex(image)
     if not search_url:
         return
