@@ -1,7 +1,7 @@
 import logging
 
-from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtCore import QRectF, QPoint, QRect
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QPoint, QRect
 from PyQt5.QtGui import QColor, QPen
 
 LOGGER = logging.getLogger(__name__)
@@ -35,7 +35,8 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         # self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
         self.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.setRenderHints(QtGui.QPainter.Antialiasing | QtGui.QPainter.SmoothPixmapTransform)
+        self.setRenderHints(
+            QtGui.QPainter.Antialiasing | QtGui.QPainter.SmoothPixmapTransform)
         self.viewport().installEventFilter(self)
         self._fit_in_view()
         self._first_show = True
@@ -136,7 +137,8 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
                 print(f'mouseMoveEvent {_event.x(), _event.y(), _event.globalX(), _event.globalY()}')
                 print(f'mapToScene {self.mapToScene(event.pos())}')
                 print(f'mapToScene {self.mapFromGlobal(event.globalPos())}')
-                self.on_photo_clicked.emit(self.mapToScene(event.pos()).toPoint())
+                self.on_photo_clicked.emit(
+                    self.mapToScene(event.pos()).toPoint())
                 if self._paint_type:
                     self._paint_start_point = self.mapToScene(event.pos())
                     if event.button() == QtCore.Qt.LeftButton:
@@ -161,9 +163,11 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
         try:
             if self._paint_type == self.PAINT_BOX:
                 paint_end_point = self.mapToScene(event.pos())
-                # self._scene.addRect(QRectF([self._paint_start_point, paint_end_point]),
-                #                     QPen())
-                if event.button() == QtCore.Qt.LeftButton and self.mouse_pressed:
+                # self._scene.addRect(
+                #     QRectF([self._paint_start_point, paint_end_point]),
+                #     QPen())
+                if event.button() == (QtCore.Qt.LeftButton and
+                                      self.mouse_pressed):
                     self.mouse_pressed = False
                     self.draw_shape()
                     self.start, self.end = QPoint(), QPoint()
@@ -172,14 +176,16 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
             print(e)
         super(SnipImageViewer, self).mouseReleaseEvent(event)
 
-    def add_text_label(self, line: int, left: int, top: int, width: int, height: int, text: str) -> None:
+    def add_text_label(self, line: int, left: int, top: int, width: int,
+                       height: int, text: str) -> None:
         # text_obj = self._scene.addText(text)
         # text_obj.setPos(left, top)
         # text_obj.setDefaultTextColor(QtGui.QColor(255, 0, 0))
         # text_obj.setFlag(QtWidgets.QGraphicsTextItem.ItemIsSelectable)
         # text_rect = text_obj.boundingRect()
-        # text_obj.setTransform(QtGui.QTransform.fromScale(width / text_rect.width(),
-        #                                                  height / text_rect.height()))
+        # text_obj.setTransform(
+        #     QtGui.QTransform.fromScale(width / text_rect.width(),
+        #     height / text_rect.height()))
 
         line_edit = QtWidgets.QLineEdit()
         line_edit.setText(text)
@@ -229,29 +235,29 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
         if self.start.x() == self.end.x() and self.start.y() == self.end.y():
             return
         elif abs(self.end.x() - self.start.x()) < 20 or abs(self.end.y() - self.start.y()) < 20:
-            if self.rect != None:
+            if self.rect is not None:
                 self.scene().removeItem(self.rect)
                 self.rect = None
             if abs(self.end.y() - self.start.y()) < 20:
-                if self.line != None:
+                if self.line is not None:
                     self.line.setLine(self.start.x(), self.start.y(), self.end.x(), self.start.y())
                 else:
                     self.line = self.scene().addLine(self.start.x(), self.start.y(), self.end.x(), self.start.y(),
                                                      self.pen)
             else:
-                if self.line != None:
+                if self.line is not None:
                     self.line.setLine(self.start.x(), self.start.y(), self.start.x(), self.end.y())
                 else:
                     self.line = self.scene().addLine(self.start.x(), self.start.y(), self.start.x(), self.end.y(),
                                                      self.pen)
         else:
-            if self.line != None:
+            if self.line is not None:
                 self.scene().removeItem(self.line)
                 self.line = None
 
             width = abs(self.start.x() - self.end.x())
             height = abs(self.start.y() - self.end.y())
-            if self.rect == None:
+            if self.rect is None:
                 self.rect = self.scene().addRect(min(self.start.x(), self.end.x()), min(self.start.y(), self.end.y()),
                                                  width, height, self.pen)
             else:
