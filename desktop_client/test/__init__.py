@@ -6,8 +6,10 @@ from pathlib import Path
 from types import ModuleType
 
 
-def find_module_file_path(module_name: str, from_path: Path = None) -> Path | None:
-    _from_path = from_path if from_path is not None else Path(__file__).parent.resolve()
+def find_module_file_path(module_name: str,
+                          from_path: Path = None) -> Path | None:
+    _from_path = from_path if from_path is not None else \
+                 Path(__file__).parent.resolve()
 
     for path in _from_path.rglob(module_name):
         if not path.is_file():
