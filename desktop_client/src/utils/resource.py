@@ -31,7 +31,8 @@ class ResourceFinder(object):
         """
         return Path(__file__).parent.resolve()
 
-    def find_resource_file(self, file_name: str, from_path: Path = None) -> Path | None:
+    def find_resource_file(
+            self, file_name: str, from_path: Path = None) -> Path | None:
         if from_path is not None:
             print(f'From path: {from_path}')
 
