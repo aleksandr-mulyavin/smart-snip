@@ -18,7 +18,8 @@ class WinEventFilter(QAbstractNativeEventFilter):
 class EventDispatcher:
     def __init__(self, key_binder) -> None:
         self.win_event_filter = WinEventFilter(key_binder)
-        self.event_dispatcher: QAbstractEventDispatcher = QAbstractEventDispatcher.instance()
+        self.event_dispatcher: QAbstractEventDispatcher = (
+            QAbstractEventDispatcher.instance())
         self.event_dispatcher.installNativeEventFilter(self.win_event_filter)
 
 
