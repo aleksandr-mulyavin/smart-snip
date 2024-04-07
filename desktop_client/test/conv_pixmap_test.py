@@ -12,7 +12,8 @@ conv_to_pixmap_func = get_func_from_module('conv_to_pixmap', resource_py)
 
 
 def _test_conv_pixmap():
-    path = Path(__file__).parent.joinpath('resources/snip_29_03_2024_21_05_13.png')
+    path = Path(__file__).parent.joinpath(
+        'resources/snip_29_03_2024_21_05_13.png')
     image: Image = PIL.Image.open(path)
     pixmap: QPixmap = conv_to_pixmap_func(image)
     assert pixmap is not None
