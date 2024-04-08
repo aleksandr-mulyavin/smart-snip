@@ -1,0 +1,84 @@
+{% extends 'main/page_layout.html' %}
+{% load static %}
+{% block title %}Приложение{% endblock %}
+
+{% block content %}
+<script>
+    function downloadImage() {
+        const imageSrc = document.getElementById('img-translated').src;
+        const link = document.createElement('a');
+        link.href = imageSrc;
+        link.download = "{{ image_filename }}";
+        link.click();
+    }
+    function showIndicator(text = "") {
+        const p = document.getElementById('indicator-text');
+        p.textContent = text;
+        $('#loading-indicator').show();
+    }
+</script>
+<div id="loading-indicator" class="modal">
+    <div class="modal-content">
+        <div class="spinner"></div>
+        <p id="indicator-text">Выполняется обработка изображения...</p>
+    </div>
+</div>
+<div class="row">
+    <div id="left-column" class="col-4 text-center">
+        <div>
+            <form id="upload-file" action="" method="post" enctype="multipart/form-data" onsubmit="showIndicator('Загружается изображение...');">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="upload_file">
+                {{ upload_file.as_p }}
+                <p><button id="upload-button" type="submit" class="btn btn-info">Загрузить</button></p>
+            </form>
+        </div>
+        <img id="img-app" src="data:image;base64,{{ encoded_image }}" class="img-fluid rounded" alt="Загрузите изображение">
+    </div>
+    <div id="center_column" class="col-4 text-center">
+        <div id="form-translate" class="form">
+            <form id="form-translate-post" method="post">
+                {% csrf_token %}
+                <div id="translator">
+                    <input type="hidden" name="form_type" value="translator_form"/>
+                    {{ translator_form }}
+                    <input id="submit-translate" type="submit" value="Перевести текст" class="btn btn-info"/>
+                </div>
+            </form>
+        </div>
+        {% if show_translate_image_button %}
+        <div>
+            <p><br/><button id="translateImageBtn" type="submit" class="btn btn-info">Перевести текст на изображении</button></p>
+        </div>
+        <script>
+            document.getElementById('translateImageBtn').addEventListener('click', function() {
+                var imgSrc = document.getElementById('img-app').src;
+                var selectElement = document.getElementById("id_lang_elements");
+                var selectedLang = selectElement.value;
+                sendDataToServer(
+                    "translate_image", 
+                    { img_src: imgSrc, lang: selectedLang },
+                    (response) => {
+                        document.getElementById('img-translated').src = "data:image;base64," + response;
+                        document.getElementById('download-image-button').style = "display: block;";
+                    },
+                    () => {},
+                    (response) => {
+                        $('#loading-indicator').hide();
+                    }
+                );
+                showIndicator("Выполняется обработка изображения...");
+            });
+        </script>
+        {% endif %}
+    </div>
+    <div id="right-column" class="col-4 text-center">
+        <div>
+            <ul id="download-image-button">
+                <button id="download-button" class="btn btn-info" onclick="downloadImage()"><i class="bi bi-filetype-exe"></i> Скачать файл </button>
+            </ul>
+            <img id="img-translated" src="data:image;base64,{{ translated_image }}" class="img-fluid rounded" alt="">
+        </div>
+    </div>
+</div>
+{% endblock %}

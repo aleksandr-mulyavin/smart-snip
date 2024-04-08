@@ -1,0 +1,58 @@
+version: '3'
+services:
+  smart-snip-api:
+    build:
+      context: ./api_server
+      dockerfile: Dockerfile
+    image: smart-snip-api:latest
+    container_name: smart-snip-api
+    restart: unless-stopped
+    env_file:
+      - ./api_server/default.env
+    command: python -m app.main
+    working_dir: /
+    networks:
+      - network-smart-snip
+    ports:
+      - "8088:8080"
+    volumes:
+      - logs:/logs
+
+  smart-snip-nginx:
+    build:
+      context: ./web_client
+      dockerfile: Dockerfile-nginx
+    container_name: smart-snip-nginx
+    restart: unless-stopped
+    networks:
+      - network-smart-snip
+    ports:
+      - "8089:80"
+    volumes:
+      - static_volume:/app/static
+    depends_on:
+      - smart-snip-web
+
+  smart-snip-web:
+    build:
+      context: ./web_client
+      dockerfile: Dockerfile
+    image: smart-snip-web:latest
+    container_name: smart-snip-web
+    restart: unless-stopped
+    env_file:
+      - ./web_client/default.env
+    command: "gunicorn -c gunicorn.py web_client.wsgi"
+    working_dir: /app
+    networks:
+      - network-smart-snip
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_volume:/app/static
+
+volumes:
+  logs: 
+  static_volume: 
+networks:
+  network-smart-snip:
