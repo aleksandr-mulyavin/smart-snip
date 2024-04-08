@@ -6,7 +6,7 @@ from datetime import datetime
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication
 
-from api_models import OCRData
+from api_models.api_model import OCRData
 from controller.snipper_controller import SnipperController
 from utils.image_viewer import conv_to_pixmap
 from utils.resource import ResourceFinder
