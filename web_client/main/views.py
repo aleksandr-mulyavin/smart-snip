@@ -97,7 +97,7 @@ def translate_image(request):
     translated_image = ''
     if img_src is not None:
         image_handler = APIImageHandler(
-            encoded_image=img_src.removeprefix('data:image/jpeg;base64,')
+            encoded_image=img_src.removeprefix('data:image;base64,')
         )
         translated_image = image_handler.translate_image(selected_lang)
         request.session['translated_image'] = translated_image

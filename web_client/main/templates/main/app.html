@@ -33,7 +33,7 @@
                 <p><button id="upload-button" type="submit" class="btn btn-info">Загрузить</button></p>
             </form>
         </div>
-        <img id="img-app" src="data:image/jpeg;base64,{{ encoded_image }}" class="img-fluid rounded" alt="Загрузите изображение">
+        <img id="img-app" src="data:image;base64,{{ encoded_image }}" class="img-fluid rounded" alt="Загрузите изображение">
     </div>
     <div id="center_column" class="col-4 text-center">
         <div id="form-translate" class="form">
@@ -59,7 +59,7 @@
                     "translate_image", 
                     { img_src: imgSrc, lang: selectedLang },
                     (response) => {
-                        document.getElementById('img-translated').src = "data:image/jpeg;base64," + response;
+                        document.getElementById('img-translated').src = "data:image;base64," + response;
                         document.getElementById('download-image-button').style = "display: block;";
                     },
                     () => {},
@@ -77,7 +77,7 @@
             <ul id="download-image-button">
                 <button id="download-button" class="btn btn-info" onclick="downloadImage()"><i class="bi bi-filetype-exe"></i> Скачать файл </button>
             </ul>
-            <img id="img-translated" src="data:image/jpeg;base64,{{ translated_image }}" class="img-fluid rounded" alt="">
+            <img id="img-translated" src="data:image;base64,{{ translated_image }}" class="img-fluid rounded" alt="">
         </div>
     </div>
 </div>
