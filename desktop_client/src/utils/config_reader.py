@@ -44,8 +44,8 @@ class ConfigReader(object):
             config_file_name = kwargs['config_file_name']
         if not config_file_name:
             config_file_name = cls.DEFAULT_CONFIG_NAME
-        if (cls.__instances.get(config_file_name) is None
-                or not isinstance(cls.__instances.get(config_file_name), cls)):
+        if cls.__instances.get(config_file_name) is None \
+                or not isinstance(cls.__instances.get(config_file_name), cls):
             cls.__instances[config_file_name] = (super(ConfigReader, cls)
                                                  .__new__(cls))
         elif cls.__init__.__name__ == '__init__':

@@ -163,8 +163,8 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
                 # self._scene.addRect(
                 #     QRectF([self._paint_start_point, paint_end_point]),
                 #     QPen())
-                if event.button() == (QtCore.Qt.LeftButton and
-                                      self.mouse_pressed):
+                if event.button() == QtCore.Qt.LeftButton \
+                        and self.mouse_pressed:
                     self.mouse_pressed = False
                     self.draw_shape()
                     self.start, self.end = QPoint(), QPoint()
@@ -188,10 +188,11 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
         line_edit.setText(text)
         line_edit.setReadOnly(True)
         line_edit.setEnabled(False)
-        line_edit.setStyleSheet('border-style: solid;'
-                                + 'border-width: 0px;border-color:'
-                                + ' red;color: red;'
-                                + 'background-color: rgba(0, 0, 100, 80);')
+        line_edit.setStyleSheet(
+            ''.join(['border-style: solid;',
+                     'border-width: 0px;border-color:',
+                     ' red;color: red;',
+                     'background-color: rgba(0, 0, 100, 80);']))
         line_edit.move(left, top)
         line_edit.resize(width - 2, height - 2)
         font = line_edit.font()
@@ -232,8 +233,9 @@ class SnipImageViewer(QtWidgets.QGraphicsView):
             return
         if self.start.x() == self.end.x() and self.start.y() == self.end.y():
             return
-        elif (abs(self.end.x() - self.start.x()) < 20
-              or abs(self.end.y() - self.start.y()) < 20):
+        elif abs(self.end.x() - self.start.x()) < 20 \
+                or abs(self.end.y() - self.start.y()) < 20:
+
             if self.rect is not None:
                 self.scene().removeItem(self.rect)
                 self.rect = None

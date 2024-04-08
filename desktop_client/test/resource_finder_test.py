@@ -1,11 +1,8 @@
-from . import get_module_from_file, get_class_from_module
-
-resource_py = get_module_from_file('resource.py')
-resource_finder_class = get_class_from_module('ResourceFinder', resource_py)
+from ..src.utils.resource import ResourceFinder
 
 
 def test_running_path():
-    resource_finder = resource_finder_class()
+    resource_finder = ResourceFinder()
     assert resource_finder is not None
 
     path = resource_finder.get_running_root()
@@ -13,7 +10,7 @@ def test_running_path():
 
 
 def test_find_this_module():
-    resource_finder = resource_finder_class()
+    resource_finder = ResourceFinder()
     assert resource_finder is not None
 
     print(f'--> File path {__file__}')
