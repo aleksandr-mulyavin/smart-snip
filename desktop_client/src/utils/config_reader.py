@@ -37,7 +37,9 @@ class ConfigReader(object):
         Метод создания инстанции класса или возврата существующей
         инстанции (часть шаблона - Одиночка)
         """
-        config_file_name = args[0]
+        config_file_name = ''
+        if args:
+            config_file_name = args[0]
         if not config_file_name and kwargs:
             config_file_name = kwargs['config_file_name']
         if not config_file_name:
