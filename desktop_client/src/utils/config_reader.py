@@ -30,18 +30,22 @@ class ConfigReader(object):
     DEFAULT_CONFIG_NAME: str = 'config.yaml'
 
     # Интсанция класса для шаблона - Одиночка
-    __instance = None
+    __instances = dict()
 
     def __new__(cls, *args, **kwargs):
         """
         Метод создания инстанции класса или возврата существующей
         инстанции (часть шаблона - Одиночка)
         """
-        if not isinstance(cls.__instance, cls):
-            cls.__instance = super(ConfigReader, cls).__new__(cls)
+        config_file_name: str = kwargs.get('config_file_name',
+                                           cls.DEFAULT_CONFIG_NAME)
+        if (cls.__instances.get(config_file_name) is None
+                or not isinstance(cls.__instances.get(config_file_name), cls)):
+            cls.__instances[config_file_name] = (super(ConfigReader, cls)
+                                                 .__new__(cls))
         elif cls.__init__.__name__ == '__init__':
             cls.__init__ = lambda *args, **kwargs: None
-        return cls.__instance
+        return cls.__instances.get(config_file_name)
 
     def __init__(self, config_file_name: str = DEFAULT_CONFIG_NAME):
         """
