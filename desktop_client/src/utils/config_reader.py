@@ -37,8 +37,11 @@ class ConfigReader(object):
         Метод создания инстанции класса или возврата существующей
         инстанции (часть шаблона - Одиночка)
         """
-        config_file_name: str = kwargs.get('config_file_name',
-                                           cls.DEFAULT_CONFIG_NAME)
+        config_file_name = args[0]
+        if not config_file_name and kwargs:
+            config_file_name = kwargs['config_file_name']
+        if not config_file_name:
+            config_file_name = cls.DEFAULT_CONFIG_NAME
         if (cls.__instances.get(config_file_name) is None
                 or not isinstance(cls.__instances.get(config_file_name), cls)):
             cls.__instances[config_file_name] = (super(ConfigReader, cls)
@@ -74,9 +77,10 @@ class ConfigReader(object):
         """
         resource_finder = ResourceFinder()
         file_path = resource_finder.find_resource_file(file_name)
+        if not file_path:
+            raise FileNotFoundError()
         filename: str = str(file_path.absolute())
 
-        config_file: dict = {}
         with open(filename, 'r') as f:
             config_file = yaml.safe_load(f)
             print(config_file)
