@@ -27,6 +27,7 @@ class ConfigReader(object):
     URL_ENV: str = 'URL_ENV'
     API_KEY_ENV: str = 'API_KEY_ENV'
     CONFIG_PATH: str = 'CONFIG_PATH'
+    DEFAULT_CONFIG_NAME: str = 'config.yaml'
 
     # Интсанция класса для шаблона - Одиночка
     __instance = None
@@ -42,11 +43,12 @@ class ConfigReader(object):
             cls.__init__ = lambda *args, **kwargs: None
         return cls.__instance
 
-    def __init__(self):
+    def __init__(self, config_file_name: str = DEFAULT_CONFIG_NAME):
         """
         Конструктор класса
         """
-        self._config = self.read_config_file()
+        self._config_file_name = config_file_name
+        self._config = self.read_config_file(self._config_file_name)
         if self._config is None \
                 or self._config.server.url is None \
                 or self._config.server.api_key is None \
@@ -61,13 +63,13 @@ class ConfigReader(object):
             self.snip_hotkey = 'Ctrl+Shift+A'
 
     @staticmethod
-    def read_config_file() -> Config | None:
+    def read_config_file(file_name: str) -> Config | None:
         """
         Чтение параметров из файла
         :return: Инстанция объекта файла конфигурации
         """
         resource_finder = ResourceFinder()
-        file_path = resource_finder.find_resource_file('config.yaml')
+        file_path = resource_finder.find_resource_file(file_name)
         filename: str = str(file_path.absolute())
 
         config_file: dict = {}
