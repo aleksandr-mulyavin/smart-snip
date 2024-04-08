@@ -51,7 +51,8 @@ class SnipperApp(QtWidgets.QApplication):
 
         # Привязка иконки в системном трее
         self._tray = QtWidgets.QSystemTrayIcon()
-        self._icon = QtGui.QIcon(str(self._resource_finder.find_resource_file(file_name='icon.png').absolute()))
+        self._icon = QtGui.QIcon(str(self._resource_finder.find_resource_file(
+            file_name='icon.png').absolute()))
         self._tray.setIcon(self._icon)
         self._tray.setVisible(True)
 
