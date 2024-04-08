@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import List
 
 from PyQt5 import QtGui, QtWidgets
@@ -38,7 +37,8 @@ class SnipperApp(QtWidgets.QApplication):
 
         # Инициализация контроллера ножниц
         self._snipper_controller = SnipperController()
-        self._snipper_controller.on_snipping_finish.connect(self._handle_snipping_finish)
+        self._snipper_controller.on_snipping_finish.connect(
+            self._handle_snipping_finish)
 
     def _config_app(self) -> None:
         """
@@ -46,8 +46,8 @@ class SnipperApp(QtWidgets.QApplication):
         """
         # Привязка hotkey для выделения экрана
         self._sample_key_binder = QtKeyBinder(win_id=None)
-        self._sample_key_binder.register_hotkey(self._config_reader.snip_hotkey,
-                                                self._handle_activate_snipping)
+        self._sample_key_binder.register_hotkey(
+            self._config_reader.snip_hotkey, self._handle_activate_snipping)
 
         # Привязка иконки в системном трее
         self._tray = QtWidgets.QSystemTrayIcon()
@@ -58,7 +58,8 @@ class SnipperApp(QtWidgets.QApplication):
         # Настройка основного меню программы в системном трее
         self._tray_menu = QtWidgets.QMenu()
         self._tray_menu_snip_action = QtWidgets.QAction("Выделить область")
-        self._tray_menu_snip_action.triggered.connect(self._handle_activate_snipping)
+        self._tray_menu_snip_action.triggered.connect(
+            self._handle_activate_snipping)
         self._tray_menu.addAction(self._tray_menu_snip_action)
         self._tray_menu_translatess = QtWidgets.QAction("Переводчик")
         self._tray_menu_translatess.triggered.connect(self._translate)
@@ -70,23 +71,32 @@ class SnipperApp(QtWidgets.QApplication):
 
         # Настройка контекстного меню выделенного изображения
         self._img_menu = QtWidgets.QMenu()
-        self._img_menu_stand_view_action = QtWidgets.QAction("Показать в просмотрщике")
-        self._img_menu_stand_view_action.triggered.connect(self._handle_stand_view)
+        self._img_menu_stand_view_action = QtWidgets.QAction(
+            "Показать в просмотрщике")
+        self._img_menu_stand_view_action.triggered.connect(
+            self._handle_stand_view)
         self._img_menu.addAction(self._img_menu_stand_view_action)
-        self._img_menu_snip_view_action = QtWidgets.QAction("Открыть выделенную область")
-        self._img_menu_snip_view_action.triggered.connect(self._handle_snip_view)
+        self._img_menu_snip_view_action = QtWidgets.QAction(
+            "Открыть выделенную область")
+        self._img_menu_snip_view_action.triggered.connect(
+            self._handle_snip_view)
         self._img_menu.addAction(self._img_menu_snip_view_action)
         self._img_menu.addSeparator()
-        self._img_menu_recognize_and_copy = QtWidgets.QAction("Распознать и скопировать в буфер")
-        self._img_menu_recognize_and_copy.triggered.connect(self._handle_recognize_and_copy)
+        self._img_menu_recognize_and_copy = QtWidgets.QAction(
+            "Распознать и скопировать в буфер")
+        self._img_menu_recognize_and_copy.triggered.connect(
+            self._handle_recognize_and_copy)
         self._img_menu.addAction(self._img_menu_recognize_and_copy)
         self._img_menu_snip_and_copy = QtWidgets.QAction("Скопировать в буфер")
-        self._img_menu_snip_and_copy.triggered.connect(self._handle_snip_and_copy)
+        self._img_menu_snip_and_copy.triggered.connect(
+            self._handle_snip_and_copy)
         self._img_menu.addAction(self._img_menu_snip_and_copy)
         self._img_menu.addSeparator()
-        self._img_menu_web_search_action = QtWidgets.QAction("Найти...")
+        self._img_menu_web_search_action = QtWidgets.QAction(
+            "Найти...")
         self._img_menu.addAction(self._img_menu_web_search_action)
-        self._img_menu_web_search_action.triggered.connect(self._handle_web_search)
+        self._img_menu_web_search_action.triggered.connect(
+            self._handle_web_search)
 
     def _handle_activate_snipping(self):
         """
@@ -110,7 +120,9 @@ class SnipperApp(QtWidgets.QApplication):
         try:
             self._img_menu.exec_(QtGui.QCursor.pos())
         except Exception:
-            logging.exception("An error occurred when handling snipping finish event", exc_info=True)
+            logging.exception(
+                "An error occurred when handling "
+                "snipping finish event", exc_info=True)
 
     def _handle_stand_view(self):
         """
@@ -148,7 +160,8 @@ class SnipperApp(QtWidgets.QApplication):
         if not self._snipper_controller.is_image_selected():
             return
         clipboard = QApplication.clipboard()
-        pixmap = conv_to_pixmap(self._snipper_controller.get_selected_image()) or QtGui.QPixmap()
+        pixmap = conv_to_pixmap(
+            self._snipper_controller.get_selected_image()) or QtGui.QPixmap()
         clipboard.setPixmap(pixmap)
 
     def _handle_web_search(self):
@@ -156,6 +169,7 @@ class SnipperApp(QtWidgets.QApplication):
         Обработчик события - Поиск в Интернете
         """
         if not self._snipper_controller.is_image_selected():
-            return open_search_in_browser(self._snipper_controller.get_selected_image())
+            return open_search_in_browser(
+                self._snipper_controller.get_selected_image())
         open_search_in_browser(
             self._snipper_controller.get_selected_image())

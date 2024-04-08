@@ -1,6 +1,5 @@
-import sys
-
-from PyQt5.QtWidgets import QApplication, QWidget, QTextEdit, QPushButton, QVBoxLayout, QComboBox
+from PyQt5.QtWidgets import (QApplication, QWidget, QTextEdit, QPushButton,
+                             QVBoxLayout, QComboBox)
 from PyQt5.QtCore import Qt
 from googletrans import Translator
 
@@ -29,14 +28,19 @@ class translatess(QWidget):
         Обработчик события - нажатие кнопки "перевести"
         """
         translator = Translator()
-        translated_text = translator.translate(self.entry_text.toPlainText(), dest=self.selected_language.currentText()).text
+        translated_text = translator.translate(
+            self.entry_text.toPlainText(),
+            dest=self.selected_language.currentText()).text
         self.output_text.setPlainText(translated_text)
 
     def init_ui(self):
         """
         Создание основного окна для переводчика
         """
-        self.setWindowTitle("Выберите язык и введите/вставьте текст, который нужно перевести: ")
+        self.setWindowTitle(
+            "Выберите язык и введите/вставьте текст, "
+            "который нужно перевести: "
+        )
 
         # вертикальное расположение элементов интерфейса
         layout = QVBoxLayout()
@@ -53,11 +57,14 @@ class translatess(QWidget):
         layout.addWidget(self.btn_paste)
 
         # Выпадающий список с выбором языка
-        languages = ["English", "French", "German", "Russian"]  # Список доступных языков
+        languages = ["English", "French", "German",
+                     "Russian"]  # Список доступных языков
         self.selected_language = QComboBox()
         self.selected_language.addItems(languages)
-        self.selected_language.setCurrentText("English")  # Устанавливаем язык по умолчанию - английский
-        layout.addWidget(self.selected_language, alignment=Qt.AlignCenter)   # выравнивание по центру
+        self.selected_language.setCurrentText(
+            "English")  # Устанавливаем язык по умолчанию - английский
+        layout.addWidget(self.selected_language,
+                         alignment=Qt.AlignCenter)   # выравнивание по центру
 
         # Кнопка перевести
         self.translate_button = QPushButton("Перевести")

@@ -1,9 +1,9 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore
 
 from utils.image_viewer import open_stand_image_viewer, Image
-from utils.config_reader import Config, ConfigReader
+from utils.config_reader import ConfigReader
 from utils.api_caller import call_image_to_text, call_image_to_data
-from api_models import OCRData
+from api_models.api_model import OCRData
 
 from ui.snipping_widget import SnippingWidget
 

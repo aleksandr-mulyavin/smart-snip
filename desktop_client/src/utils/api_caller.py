@@ -6,7 +6,8 @@ import logging
 from io import BytesIO
 from PIL.Image import Image
 
-from api_models import ImageToTextRequest, ImageToDataResponse, OCRData
+from api_models.api_model import (ImageToTextRequest, ImageToDataResponse,
+                                  OCRData)
 
 API_METHOD_TO_TEXT = 'image_to_text'
 """Имя метода для распознавания текста на изображении"""

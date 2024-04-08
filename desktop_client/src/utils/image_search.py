@@ -18,7 +18,8 @@ def get_link_for_search_in_yandex(image: Image) -> str:
     files = {'upfile': ('blob', img_byte_arr.getvalue(), 'image/jpeg')}
     params = {'rpt': 'imageview',
               'format': 'json',
-              'request': '{"blocks":[{"block":"b-page_type_search-by-image__link"}]}'}
+              'request':
+              '{"blocks":[{"block":"b-page_type_search-by-image__link"}]}'}
     response = requests.post(search_url, params=params, files=files)
     query_string = json.loads(response.content)['blocks'][0]['params']['url']
     return search_url + '?' + query_string

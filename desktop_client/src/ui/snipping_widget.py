@@ -86,7 +86,8 @@ class SnippingWidget(QtWidgets.QMainWindow):
         :param event: Данные события
         """
         trans_color = QtGui.QColor(22, 100, 233)
-        selected_rect = QtCore.QRectF(self._start_point, self._end_point).normalized()
+        selected_rect = QtCore.QRectF(
+            self._start_point, self._end_point).normalized()
         painter = QtGui.QPainter(self)
         trans_color.setAlphaF(0.2)
         painter.setBrush(trans_color)
