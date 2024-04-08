@@ -27,26 +27,37 @@ class ConfigReader(object):
     URL_ENV: str = 'URL_ENV'
     API_KEY_ENV: str = 'API_KEY_ENV'
     CONFIG_PATH: str = 'CONFIG_PATH'
+    DEFAULT_CONFIG_NAME: str = 'config.yaml'
 
     # Интсанция класса для шаблона - Одиночка
-    __instance = None
+    __instances = dict()
 
     def __new__(cls, *args, **kwargs):
         """
         Метод создания инстанции класса или возврата существующей
         инстанции (часть шаблона - Одиночка)
         """
-        if not isinstance(cls.__instance, cls):
-            cls.__instance = super(ConfigReader, cls).__new__(cls)
+        config_file_name = ''
+        if args:
+            config_file_name = args[0]
+        if not config_file_name and kwargs:
+            config_file_name = kwargs['config_file_name']
+        if not config_file_name:
+            config_file_name = cls.DEFAULT_CONFIG_NAME
+        if (cls.__instances.get(config_file_name) is None
+                or not isinstance(cls.__instances.get(config_file_name), cls)):
+            cls.__instances[config_file_name] = (super(ConfigReader, cls)
+                                                 .__new__(cls))
         elif cls.__init__.__name__ == '__init__':
             cls.__init__ = lambda *args, **kwargs: None
-        return cls.__instance
+        return cls.__instances.get(config_file_name)
 
-    def __init__(self):
+    def __init__(self, config_file_name: str = DEFAULT_CONFIG_NAME):
         """
         Конструктор класса
         """
-        self._config = self.read_config_file()
+        self._config_file_name = config_file_name
+        self._config = self.read_config_file(self._config_file_name)
         if self._config is None \
                 or self._config.server.url is None \
                 or self._config.server.api_key is None \
@@ -61,16 +72,17 @@ class ConfigReader(object):
             self.snip_hotkey = 'Ctrl+Shift+A'
 
     @staticmethod
-    def read_config_file() -> Config | None:
+    def read_config_file(file_name: str) -> Config | None:
         """
         Чтение параметров из файла
         :return: Инстанция объекта файла конфигурации
         """
         resource_finder = ResourceFinder()
-        file_path = resource_finder.find_resource_file('config.yaml')
+        file_path = resource_finder.find_resource_file(file_name)
+        if not file_path:
+            raise FileNotFoundError()
         filename: str = str(file_path.absolute())
 
-        config_file: dict = {}
         with open(filename, 'r') as f:
             config_file = yaml.safe_load(f)
             print(config_file)

@@ -1,0 +1,4 @@
+server:
+  url: 'https://test.ru/'
+  api_key: '1234567890'
+snip_hotkey: "Ctrl+Shift+A"
