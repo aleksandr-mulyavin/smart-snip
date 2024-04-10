@@ -137,3 +137,75 @@ X-API-key: ...
   "response": "list of supported languages"
 }
 ```
+
+# <a name="install"></a>Установка и запуск
+
+Установку API и Web-клиента рекомендуется производить в контейнеры Docker с помощью настроек из файла проекта docker-compose.yaml. В этом случае создаются три контейнера с API, web-клиентом и прокси сервером Nginx (требуется для работы Django со статическими файлами).
+
+Но при необходимости эти сервисы можно установить по отдельности. Далее описана установка по рекомендуемому сценарию.
+
+## API и Web-клиент
+
+Перед созданием и запуском контейнеров Docker с API и Web-клиентом нужно создать файлы default.env, которые содержат значения переменных среды с настройками сервисов.
+
+### Переменные среды контейнера API
+
+Файл default.env:
+
+```
+SMART_SNIP_TOKEN=...
+TRANSLATE_PROVIDER=libre
+TRANSLATE_KEY=
+TRANSLATE_BASE_URL=http://libretranslate:5000/
+```
+
+В переменной `SMART_SNIP_TOKEN` указывается токен для доступа к API.
+
+Если для перевода будет использоваться [LibreTranslate](https://libretranslate.com/), то в переменной `TRANSLATE_PROVIDER` должно быть указано значение `libre`. В переменной `TRANSLATE_BASE_URL` нужно указать адрес сервера LibreTranslate, а в переменной `TRANSLATE_KEY` - ключ доступа. Сервер LibreTranslate можно установить напрямую на своем сервере или в отдельном контейнере Docker, инструкция по установке есть в [репозитории проекта](https://github.com/LibreTranslate/LibreTranslate).
+
+Если провайдер перевода не будет указан, то будет использован провайдер [MyMemory](https://mymemory.translated.net/doc/spec.php).
+
+### Django SECRET_KEY в Web-клиенте
+
+В каталоге Web-клиента (./web_client/web_client/) нужно создать файл secret.py, в котором должна быть одна строка:
+```python
+SECRET_KEY = '<secret_key>'
+```
+Вместо `<secret_key>` нужно сгенерировать и вставить новый ключ. Для генерации ключа можно воспользоваться этим сервисом: [Djecrety](https://djecrety.ir/). Или любым подобным.
+
+### Переменные среды контейнера Web-клиента
+
+Файл default.env:
+
+```
+API_URL=http://smart-snip-api:8080
+API_TOKEN=...
+API_IMAGE_TO_TEXT=image_to_text
+API_TRANSLATE_IMAGE=translate_image_text
+TRANSLATE_PROVIDER=libre
+TRANSLATE_KEY=
+TRANSLATE_BASE_URL=http://libretranslate:5000/
+DJANGO_DEBUG=0
+DJANGO_ALLOWED_HOSTS=smart-snip.domain.ru
+CSRF_TRUSTED_ORIGINS=https://*.domain.ru
+```
+
+В переменных `API_URL`, `API_TOKEN`, `API_IMAGE_TO_TEXT`, `API_TRANSLATE_IMAGE` указываются параметры доступа к API проекта.
+
+В переменных `TRANSLATE_PROVIDER`, `TRANSLATE_KEY`, `TRANSLATE_BASE_URL` указываются параметры сервиса перевода (аналогично параметрам в API).
+
+Переменная `DJANGO_DEBUG` отвечает за режим отладки в Django. Если значение будет равно 1, то режим отладки будет включен.
+
+В переменной `DJANGO_ALLOWED_HOSTS` должны быть указаны все URL, по которым будет доступен Web-клиент. Если адресов больше одного, то их нужно перечислить через пробел.
+
+Если доступ к Web-клиенту выполняется через домен с использованием HTTPS, то в переменной `CSRF_TRUSTED_ORIGINS` необходимо указать этот домен. Доступно указание домена в таком виде: `https://*.domain.ru`.
+
+### Команды создания и запуска контейнеров
+
+После заполнения файлов с переменными среды, нужно выполнить следующие команды Docker Compose для построения образов, создания и запуска контейнеров:
+
+```bash
+docker compose build
+docker compose create
+docker compose start
+```
